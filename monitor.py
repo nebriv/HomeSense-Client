@@ -333,6 +333,7 @@ class Monitor(Daemon):
             self.dev_api_server = self.config.get('Server', 'dev_server')
         if self.config.has_option('RunTime', 'noServer'):
             self.noServer = self.config.get('RunTime', 'noServer')
+            self.token = "FakeToken"
         else:
             self.noServer = False
         self.save_config()
