@@ -317,6 +317,7 @@ class Monitor(Daemon):
 
                 if self.config.has_option('RunTime', 'noServer'):
                     self.noServer = self.config.get('RunTime', 'noServer')
+                    self.token = "FakeToken"
                 else:
                     self.noServer = False
 
