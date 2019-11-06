@@ -329,6 +329,10 @@ class Monitor(Daemon):
         self.api_server = self.config.get('Server', 'server')
         if self.config.has_option('Server', 'dev_server'):
             self.dev_api_server = self.config.get('Server', 'dev_server')
+        if self.config.has_option('RunTime', 'noServer'):
+            self.noServer = self.config.get('RunTime', 'noServer')
+        else:
+            self.noServer = False
         self.save_config()
 
     def run(self):
