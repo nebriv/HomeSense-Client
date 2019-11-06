@@ -268,8 +268,9 @@ class Monitor(Daemon):
     def initialize(self):
         logger.info("Initializing HomeSense Monitor")
         #print("Initializing HomeSense Monitor...")
+        self.generate_device_id()
         if not self.noServer:
-            self.generate_device_id()
+
             logger.info("Device ID: %s" % self.device_id)
             #print("Device ID: %s" % self.device_id)
             self.config.set('Server', 'device_id', str(self.device_id))
