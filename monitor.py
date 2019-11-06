@@ -268,12 +268,13 @@ class Monitor(Daemon):
     def initialize(self):
         logger.info("Initializing HomeSense Monitor")
         #print("Initializing HomeSense Monitor...")
-        self.generate_device_id()
-        logger.info("Device ID: %s" % self.device_id)
-        #print("Device ID: %s" % self.device_id)
-        self.config.set('Server', 'device_id', str(self.device_id))
-        self.register()
-        self.save_config()
+        if not self.noServer:
+            self.generate_device_id()
+            logger.info("Device ID: %s" % self.device_id)
+            #print("Device ID: %s" % self.device_id)
+            self.config.set('Server', 'device_id', str(self.device_id))
+            self.register()
+            self.save_config()
 
 
     def check_first_start(self):
@@ -316,7 +317,7 @@ class Monitor(Daemon):
                 if self.config.has_option('RunTime', 'noServer'):
                     self.noServer = self.config.get('RunTime', 'noServer')
                 else:
-                    self.noServer = None
+                    self.noServer = False
 
         except IOError as err:
             logger.warning("Config file not found")
@@ -359,20 +360,21 @@ class Monitor(Daemon):
                 logger.info("Uploading sensor data")
                 self.display.update_screen(["Uploading Data"])
                 time.sleep(1)
-                if self.dev_api_server:
-                    try:
-                        d = requests.post(self.dev_api_server + '/api/data/add/', data=post_data)
-                    except Exception as err:
-                        logger.error(err)
-                        #print("CAUGHT EXCEPTION: %s" % err)
-                r = requests.post(self.api_server + '/api/data/add/', data=post_data)
-                if r.status_code == 201:
-                    logger.debug("Data uploaded")
-                    #print("Data Uploaded")
-                else:
-                    logger.error("%s %s" % (r.status_code, r.json()))
-                    # print(r.status_code)
-                    # print(r.json())
+                if not self.noServer:
+                    if self.dev_api_server:
+                        try:
+                            d = requests.post(self.dev_api_server + '/api/data/add/', data=post_data)
+                        except Exception as err:
+                            logger.error(err)
+                            #print("CAUGHT EXCEPTION: %s" % err)
+                    r = requests.post(self.api_server + '/api/data/add/', data=post_data)
+                    if r.status_code == 201:
+                        logger.debug("Data uploaded")
+                        #print("Data Uploaded")
+                    else:
+                        logger.error("%s %s" % (r.status_code, r.json()))
+                        # print(r.status_code)
+                        # print(r.json())
                 self.display.update_screen(["Data Uploaded...", "", "Sleeping 300 seconds"])
                 timer = 300
                 while timer > 0:
