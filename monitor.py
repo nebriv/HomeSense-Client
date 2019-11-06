@@ -13,7 +13,7 @@ import configparser
 from daemon import Daemon
 from configparser import ConfigParser
 import os
-#from sensors import lux, pressure_altitude, temperature_humidity, sgp30
+from sensors import lux, pressure_altitude, temperature_humidity, sgp30
 import logging
 import psutil
 import uuid
