@@ -103,15 +103,6 @@ def iter_namespace(ns_pkg):
     return pkgutil.iter_modules(ns_pkg.__path__, ns_pkg.__name__ + ".")
 
 
-for finder, name, ispkg in iter_namespace(sensors):
-    print(finder,name,ispkg)
-    m = __import__(name)
-    print(dir(m))
-
-exit()
-
-
-
 class Monitor(Daemon):
     verbose = 0
 
