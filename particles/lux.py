@@ -3,7 +3,7 @@ from time import sleep
 import pigpio
 from sensors.base_sensor import Sensor
 
-addr = "0x39"
+addr = 0x39
 
 class Particle(Sensor):
 

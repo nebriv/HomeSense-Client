@@ -8,7 +8,7 @@
 import time
 from sensors.base_sensor import Sensor
 
-addr = "0x60"
+addr = 0x60
 
 class Particle(Sensor):
 

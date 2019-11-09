@@ -4,7 +4,7 @@ import pigpio
 from sensors.base_sensor import Sensor
 from sensors import sgp30
 
-addr = "0x39"
+addr = 0x39
 SGPsensor = sgp30.SGPsensor
 
 class Particle(Sensor):

@@ -234,7 +234,8 @@ class Monitor(Daemon):
         logger.debug("Found sensor addresses: %s" % " ".join(self.sensor_addresses))
         self.particles = []
         for particle_mod in loaded_particle_modules:
-            if particle_mod.addr in self.sensor_addresses:
+            print(str(particle_mod.addr))
+            if str(particle_mod.addr) in self.sensor_addresses:
                 particle = particle_mod.Particle()
                 logger.info("Found particle: %s" % particle.name)
                 self.particles.append(particle)
