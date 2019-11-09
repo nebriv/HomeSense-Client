@@ -382,6 +382,7 @@ class Monitor(Daemon):
         self.display.update_screen(["Booting..."])
         time.sleep(2)
         self.check_for_updates()
+        self.load_config()
         if self.check_first_start():
             self.create_initial_config()
             self.get_sensors()
