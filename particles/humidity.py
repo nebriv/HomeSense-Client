@@ -13,7 +13,7 @@ class Particle(Sensor):
         global HTU21DF
         Sensor.__init__(self)
         self.htuObject = HTU21DF
-
+        print(self.htuObject.dummy_var)
         self.name = "Humidity"
         self.unit = "fahrenheit"
 

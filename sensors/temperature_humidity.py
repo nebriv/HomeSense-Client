@@ -30,10 +30,14 @@ import math
 from threading import Thread
 from .base_sensor import Sensor
 
-addr = "0x40"
+addr = 0x40
+print("HI")
 
 class HTU21DF():
+    dummyvar = "BEN"
     def __init__(self):
+        global addr
+        self.addr = addr
         self.sensor_running = False
 
     def run_sensor(self):
@@ -95,23 +99,3 @@ class HTU21DF():
         time.sleep(0.2) # reset takes 15ms so let's give it some time
 
 HTU21DFSensor = HTU21DF()
-
-class Humidity(Sensor):
-    def __init__(self):
-        global HTU21DFSensor
-        super(Sensor, self).__init__()
-        if HTU21DFSensor:
-            #print("voc- it exists")
-            self.sensorObject = HTU21DFSensor
-        else:
-            #print("voc- it doesn't exist")
-            HTU21DFSensor = HTU21DF()
-            self.sensorObject = HTU21DFSensor
-        self.name = "humidity"
-
-    def get_name(self):
-        return self.name
-
-    def get_data(self):
-
-        return self.sensorObject.humidity

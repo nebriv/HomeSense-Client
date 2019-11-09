@@ -10,6 +10,7 @@ addr = 0x58
 
 class SGP30():
     def __init__(self):
+        global addr
         self.addr = addr
         self.sensor_running = False
         #super(Sensor).__init__()
