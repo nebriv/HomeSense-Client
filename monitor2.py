@@ -314,8 +314,10 @@ class Monitor(Daemon):
         os.remove('sensor.dat')
 
     def get_data(self):
-        for particle in self.particles:
-            print(particle.get_data())
+        while True:
+            for particle in self.particles:
+                print(particle.get_data())
+            time.sleep(15)
 
     def run(self):
         logger.debug("Starting Run Statement")
@@ -340,6 +342,7 @@ class Monitor(Daemon):
                 self.first_time_setup()
 
         self.initialize_sensors()
+        self.get_data()
 
 if __name__ == "__main__":
     daemon = Monitor('homesense.pid', verbose=2)
