@@ -31,12 +31,8 @@ from threading import Thread
 from .base_sensor import Sensor
 
 addr = 0x40
-print("HI")
 
 class HTU21DF():
-    dummyvar = "BEN"
-    sensor_running = False
-
     def __init__(self):
         global addr
         self.addr = addr
