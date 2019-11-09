@@ -6,7 +6,7 @@ from sensors import temperature_humidity
 import time
 
 addr = 0x40
-HTU21DF = temperature_humidity.HTU21DF
+HTU21DF = temperature_humidity.HTU21DFSensor
 
 class Particle(Sensor):
     def __init__(self):
