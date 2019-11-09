@@ -5,6 +5,7 @@ from sensors.base_sensor import Sensor
 from sensors import sgp30
 
 addr = "0x39"
+SGPsensor = sgp30.SGPsensor
 
 class Particle(Sensor):
     # REALLY JANK way to share the threaded sensor bus... but it works for now
@@ -12,18 +13,20 @@ class Particle(Sensor):
         # Get the SGP global var (initially set to none)
         Sensor.__init__(self)
         global SGPsensor
-        self.name = "Light"
-        self.unit = "lux"
+        self.name = "CO2"
+        self.unit = "ppm"
 
-        if SGPsensor:
-            print("co2- it exists")
+        print(SGPsensor.sensor_running)
+
+        if SGPsensor.sensor_running:
+            print("SPG Sensor Running")
             self.sgpObject = SGPsensor
         else:
-            print("co2- it doesn't exist")
+            print("SPG Sensor not running")
             # If it doesn't exist, create it.
             # SGPsensor = sgp30.SGP30()
             # self.sgpObject = SGPsensor
-        self.name = "co2"
+
 
     def get_name(self):
         return self.name

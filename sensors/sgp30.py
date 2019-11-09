@@ -11,8 +11,9 @@ addr = "0x58"
 class SGP30():
     def __init__(self):
         self.addr = addr
+        self.sensor_running = False
         #super(Sensor).__init__()
-        self.setup()
+        #self.setup()
 
     def run_sensor(self):
         while True:
