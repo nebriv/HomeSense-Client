@@ -16,8 +16,7 @@ class Particle(Sensor):
         Sensor.__init__(self)
         self.name = "Pressure"
         self.unit = "kPa"
-        self.bus = smbus.SMBus(1)
-        self.bus = True
+
 
     def get_data(self):
         self.bus.write_byte_data(0x60, 0x26, 0x39)
@@ -35,6 +34,10 @@ class Particle(Sensor):
         return pressure
 
     def setup(self):
-        print("Nothing to setup")
-        return True
+        self.bus = smbus.SMBus(1)
+        self.bus = True
 
+if __name__ == "__main__":
+    test = Particle()
+    test.setup()
+    print(test.get_data())
