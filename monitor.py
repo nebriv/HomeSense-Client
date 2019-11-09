@@ -146,18 +146,13 @@ class Monitor(Daemon):
 
     def get_sensors(self):
         logger.info("Loading available particles...")
-        particles = load_all_modules_from_dir("sensors")
-        print(particles)
-        for each in particles:
-            print(each.addr)
-
-        exit()
+        loaded_particle_modules = load_all_modules_from_dir("sensors")
 
 
         logger.info("Detecting sensors")
         self.display.update_screen(["Detecting Sensors..."])
-        time.sleep(2)
-        self.available_sensors = []
+        time.sleep(1)
+
         try:
             p = subprocess.Popen(['i2cdetect', '-y', '1'], stdout=subprocess.PIPE, )
             firstLine = True
@@ -176,41 +171,45 @@ class Monitor(Daemon):
                         if (each != "") and (each != "--"):
                             # print(each)
                             self.sensor_addresses.append("0x%s" % each)
-            self.sensor_addresses.append("0x58")
         except Exception as err:
             logger.warning("i2cdetect not supported, setting dummy vars")
             #print("Not supported on this OS, setting dummy vars")
             self.sensor_addresses = ['0x40', '0x60', '0x39']
 
+        for particle in loaded_particle_modules:
+            if particle.addr in self.sensor_addresses:
+                print("Found particle: %s" % particle)
+        exit()
+
         i = 1
 
-        for sensor_address in self.config.items('SensorAddresses'):
-            if sensor_address[1] in self.sensor_addresses:
-                #print(sensor_address)
-                try:
-                    unit = self.config.get('SensorUnits', sensor_address[0])
-                    #print(unit)
-                except Exception as e:
-                    if "No option" in str(e):
-                        logger.warning("No unit for %s sensor" % sensor_address[1])
-                        #print("No unit set")
-                        unit = "Unknown"
-
-                self.available_sensors.append({'sensor_name': "sensor_%s" % int_to_en(i),
-                                               'name': sensor_address[0],
-                                               'sensor_data_unit_name': "sensor_%s_data_unit" % int_to_en(i),
-                                               'sensor_data_unit': unit,
-                                               'address': sensor_address[1],
-                                               "particle_id": str(uuid.uuid4())})
-                i += 1
-        line = ""
-        for each in self.available_sensors:
-            line += "%s " % each['name']
-        self.display.update_screen(["Found Sensors:", line])
-        time.sleep(4)
-        #print(self.available_sensors)
-        logger.debug("Found sensors: %s" % self.available_sensors)
-        #exit()
+        # for sensor_address in self.config.items('SensorAddresses'):
+        #     if sensor_address[1] in self.sensor_addresses:
+        #         #print(sensor_address)
+        #         try:
+        #             unit = self.config.get('SensorUnits', sensor_address[0])
+        #             #print(unit)
+        #         except Exception as e:
+        #             if "No option" in str(e):
+        #                 logger.warning("No unit for %s sensor" % sensor_address[1])
+        #                 #print("No unit set")
+        #                 unit = "Unknown"
+        #
+        #         self.available_sensors.append({'sensor_name': "sensor_%s" % int_to_en(i),
+        #                                        'name': sensor_address[0],
+        #                                        'sensor_data_unit_name': "sensor_%s_data_unit" % int_to_en(i),
+        #                                        'sensor_data_unit': unit,
+        #                                        'address': sensor_address[1],
+        #                                        "particle_id": str(uuid.uuid4())})
+        #         i += 1
+        # line = ""
+        # for each in self.available_sensors:
+        #     line += "%s " % each['name']
+        # self.display.update_screen(["Found Sensors:", line])
+        # time.sleep(4)
+        # #print(self.available_sensors)
+        # logger.debug("Found sensors: %s" % self.available_sensors)
+        # #exit()
 
     def save_sensors(self):
         pass
