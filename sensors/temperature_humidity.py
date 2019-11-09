@@ -97,3 +97,4 @@ class HTU21DF():
         time.sleep(0.2) # reset takes 15ms so let's give it some time
 
 HTU21DFSensor = HTU21DF()
+print(HTU21DFSensor.sensor_running)
