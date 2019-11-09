@@ -148,6 +148,9 @@ class Monitor(Daemon):
         logger.info("Loading available particles...")
         particles = load_all_modules_from_dir("sensors")
         print(particles)
+        for each in particles:
+            print(each.addr)
+
         exit()
 
 
