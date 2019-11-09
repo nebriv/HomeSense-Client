@@ -30,7 +30,7 @@ import math
 from threading import Thread
 from .base_sensor import Sensor
 
-addr = 0x40
+addr = "0x40"
 
 class HTU21DF():
     def __init__(self):

@@ -6,7 +6,7 @@ from struct import unpack
 from threading import Thread
 #from .base_sensor import Sensor
 
-addr = 0x58
+addr = "0x58"
 
 class SGP30():
     def __init__(self):

@@ -6,9 +6,9 @@
 
 import smbus
 import time
-from .base_sensor import Sensor
+from sensors.base_sensor import Sensor
 
-addr = 0x60
+addr = "0x60"
 
 class Pressure(Sensor):
 

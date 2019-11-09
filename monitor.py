@@ -146,7 +146,7 @@ class Monitor(Daemon):
 
     def get_sensors(self):
         logger.info("Loading available particles...")
-        loaded_particle_modules = load_all_modules_from_dir("sensors")
+        loaded_particle_modules = load_all_modules_from_dir("particles")
 
 
         logger.info("Detecting sensors")

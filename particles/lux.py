@@ -1,9 +1,9 @@
 from tsl2561 import TSL2561
 from time import sleep
 import pigpio
-from .base_sensor import Sensor
+from sensors.base_sensor import Sensor
 
-addr = 0x39
+addr = "0x39"
 
 class Lux(Sensor):
 
