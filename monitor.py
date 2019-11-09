@@ -166,7 +166,8 @@ class Monitor(Daemon):
                                                'name': sensor_address[0],
                                                'sensor_data_unit_name': "sensor_%s_data_unit" % int_to_en(i),
                                                'sensor_data_unit': unit,
-                                               'address': sensor_address[1]})
+                                               'address': sensor_address[1],
+                                               "particle_id": str(uuid.uuid4())})
                 i += 1
         line = ""
         for each in self.available_sensors:
@@ -224,6 +225,24 @@ class Monitor(Daemon):
                 #print(r.status_code, r.text)
                 logger.error("Unable to register with server: %s %s" % (r.status_code, r.text))
                 exit()
+        except Exception as err:
+            logger.error("Unable to register with server: %s" % (err))
+            exit()
+
+        try:
+            for each in self.available_sensors:
+                data = {"device_id": self.device_id,
+                        "particle_name": each['name'],
+                        "particle_id": each['particle_id',
+                        "particle_unit": each['sensor_data_unit']]}
+
+                r = requests.post(self.api_server + "/api/sensors/add_particle/", data=data)
+                if r.status_code == 201:
+                    logger.info("Successfully Registered Particle %s" % each['name'])
+                else:
+                    #print(r.status_code, r.text)
+                    logger.error("Unable to register with server: %s %s" % (r.status_code, r.text))
+                    exit()
         except Exception as err:
             logger.error("Unable to register with server: %s" % (err))
             exit()
