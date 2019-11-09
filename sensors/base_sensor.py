@@ -18,9 +18,7 @@ class Sensor(object):
         return NotImplementedError
 
     def generate_id(self):
-        print("Generating UUID")
         self.id = str(uuid.uuid4())
-        print("My UUID is: %s" % self.id)
 
 def main():
     sensor = Sensor()

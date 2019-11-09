@@ -180,13 +180,13 @@ class Monitor(Daemon):
         self.particles = []
         for particle_mod in loaded_particle_modules:
             if particle_mod.addr in self.sensor_addresses:
-                print("Found particle: %s" % particle_mod)
-                particle = particle_mod.Particle()
-                print(particle.id)
-                self.particles.append(particle)
-        exit()
 
-        i = 1
+                particle = particle_mod.Particle()
+                print("Found particle: %s" % particle.name)
+                self.particles.append(particle)
+
+        print(self.particles)
+        exit()
 
         # for sensor_address in self.config.items('SensorAddresses'):
         #     if sensor_address[1] in self.sensor_addresses:
