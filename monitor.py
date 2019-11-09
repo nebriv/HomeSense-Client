@@ -257,11 +257,11 @@ class Monitor(Daemon):
             exit()
 
         try:
-            for each in self.available_sensors:
+            for each in self.particles:
                 data = {"device_id": self.device_id,
-                        "particle_name": each['name'],
-                        "particle_id": each['particle_id'],
-                        "particle_unit": each['sensor_data_unit']}
+                        "particle_name": each.name,
+                        "particle_id": each.id,
+                        "particle_unit": each.unit}
                 logger.debug("Uploading registering particle: %s" % data)
                 r = requests.post(self.api_server + "/api/sensors/add_particle/", data=data)
                 if r.status_code == 201:
