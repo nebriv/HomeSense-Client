@@ -253,6 +253,11 @@ class Monitor(Daemon):
         with open("sensor.dat", 'wb') as outfile:
             pickle.dump(data, outfile)
 
+    def print_particle_info(self):
+        logger.info("Printing Loaded Particle Info")
+        for particle in self.particles:
+            print(particle.name, particle.unit)
+
     def load_sensor(self):
         try:
             if os.path.isfile("sensor.dat"):
