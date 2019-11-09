@@ -225,7 +225,7 @@ class Monitor(Daemon):
                     for each in entry:
                         if (each != "") and (each != "--"):
                             # print(each)
-                            self.sensor_addresses.append(str(each))
+                            self.sensor_addresses.append(each)
         except Exception as err:
             logger.warning("i2cdetect not supported, setting dummy vars")
             #print("Not supported on this OS, setting dummy vars")
@@ -234,7 +234,7 @@ class Monitor(Daemon):
         logger.debug("Found sensor addresses: %s" % " ".join(self.sensor_addresses))
         self.particles = []
         for particle_mod in loaded_particle_modules:
-            print(str(particle_mod.addr))
+            print(particle_mod.addr)
             if str(particle_mod.addr) in self.sensor_addresses:
                 particle = particle_mod.Particle()
                 logger.info("Found particle: %s" % particle.name)
