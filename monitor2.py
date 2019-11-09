@@ -225,7 +225,7 @@ class Monitor(Daemon):
                     for each in entry:
                         if (each != "") and (each != "--"):
                             # print(each)
-                            self.sensor_addresses.append("0x%s" % each)
+                            self.sensor_addresses.append(str(each))
         except Exception as err:
             logger.warning("i2cdetect not supported, setting dummy vars")
             #print("Not supported on this OS, setting dummy vars")
