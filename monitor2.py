@@ -267,6 +267,7 @@ class Monitor(Daemon):
                 for each in data['sensors']:
                     self.particles.append(pickle.loads(each))
                 logger.debug("Loaded sensor data. Device ID: %s" % self.device_id)
+                self.print_particle_info()
             else:
                 raise FileNotFoundError("Sensor Data not found.")
         except Exception as err:
