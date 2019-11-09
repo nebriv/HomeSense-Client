@@ -307,6 +307,7 @@ class Monitor(Daemon):
         time.sleep(1)
         self.check_for_updates()
         self.load_config()
+        self.loaded_particle_modules = load_all_modules_from_dir("particles")
         if self.first_start():
             self.first_time_setup()
             # Generate device ID
