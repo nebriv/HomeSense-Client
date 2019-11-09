@@ -34,7 +34,7 @@ addr = "0x40"
 
 class HTU21DF():
     def __init__(self):
-        self.setup()
+        pass
 
     def run_sensor(self):
         while True:
@@ -88,38 +88,13 @@ class HTU21DF():
         time.sleep(5)
         print("Sensor Started")
 
-
     def htu_reset(self):
         handle = self.pi.i2c_open(self.bus, self.addr) # open i2c bus
         self.pi.i2c_write_byte(handle, self.reset) # send reset command
         self.pi.i2c_close(handle) # close i2c bus
         time.sleep(0.2) # reset takes 15ms so let's give it some time
 
-HTU21DFSensor = None
-
-class Temperature(Sensor):
-    def __init__(self):
-        global HTU21DFSensor
-        super(Sensor, self).__init__()
-        if HTU21DFSensor:
-            #print("voc- it exists")
-            self.sensorObject = HTU21DFSensor
-        else:
-            #print("voc- it doesn't exist")
-            HTU21DFSensor = HTU21DF()
-            self.sensorObject = HTU21DFSensor
-        self.name = "temperature"
-        self.unit = "fahrenheit"
-
-    def get_name(self):
-        return self.name
-
-    def get_data(self):
-        if self.unit == "celsius":
-            return self.sensorObject.temperature
-        elif  self.unit == "fahrenheit":
-            temperature = 9.0 / 5.0 * self.sensorObject.temperature + 32
-            return temperature
+HTU21DFSensor = HTU21DF()
 
 class Humidity(Sensor):
     def __init__(self):

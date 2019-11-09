@@ -4,6 +4,7 @@ import pigpio
 from sensors.base_sensor import Sensor
 from sensors import sgp30
 import time
+
 addr = 0x58
 SGPsensor = sgp30.SGPsensor
 
