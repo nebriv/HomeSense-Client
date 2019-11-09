@@ -37,17 +37,17 @@ logger.addHandler(fh)
 
 #api_server = "http://192.168.1.161:8000"
 
-def get_all_subclasses(cls):
-    all_subclasses = []
-
-    for subclass in cls.__subclasses__():
-        all_subclasses.append(subclass)
-        all_subclasses.extend(get_all_subclasses(subclass))
-
-    return all_subclasses
-
-print(get_all_subclasses(base_sensor))
-exit()
+# def get_all_subclasses(cls):
+#     all_subclasses = []
+#
+#     for subclass in cls.__subclasses__():
+#         all_subclasses.append(subclass)
+#         all_subclasses.extend(get_all_subclasses(subclass))
+#
+#     return all_subclasses
+#
+# print(get_all_subclasses(base_sensor))
+# exit()
 
 def int_to_en(num):
     d = { 0 : 'zero', 1 : 'one', 2 : 'two', 3 : 'three', 4 : 'four', 5 : 'five',
@@ -438,7 +438,7 @@ if __name__ == "__main__":
             formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
             handler.setFormatter(formatter)
             logger.addHandler(handler)
-            
+
             daemon.run()
         else:
             print("Unknown command")
