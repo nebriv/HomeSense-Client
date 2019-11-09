@@ -253,10 +253,12 @@ class Monitor(Daemon):
         with open("sensor.dat", 'wb') as outfile:
             pickle.dump(data, outfile)
 
-    def print_particle_info(self):
-        logger.info("Printing Loaded Particle Info")
+    def print_loaded_particle(self):
+        names = " "
         for particle in self.particles:
-            print(particle.name, particle.unit)
+            names += "%s " % particle.name
+        names = names.strip()
+        logger.info("Loaded Particles: %s" % names)
 
     def load_sensor(self):
         try:
