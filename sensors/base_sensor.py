@@ -4,6 +4,7 @@ addr = None
 
 class Sensor(object):
     def __init__(self):
+        print("Hello")
         self.name = "Not Implemented"
         self.generate_id()
 

@@ -8,10 +8,10 @@ addr = "0x39"
 class Particle(Sensor):
 
     def __init__(self):
-        super(Sensor, self).__init__()
+        Sensor.__init__(self)
         self.name = "light"
-        self.tsl = TSL2561(debug=1)
-        self.tsl.set_auto_range(16)
+        #self.tsl = TSL2561(debug=1)
+        #self.tsl.set_auto_range(16)
 
     def get_data(self):
         #return 54

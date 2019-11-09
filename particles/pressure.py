@@ -4,7 +4,7 @@
 # This code is designed to work with the MPL3115A2_I2CS I2C Mini Module available from ControlEverything.com.
 # https://www.controleverything.com/products
 
-import smbus
+#import smbus
 import time
 from sensors.base_sensor import Sensor
 
@@ -13,9 +13,10 @@ addr = "0x60"
 class Particle(Sensor):
 
     def __init__(self):
-        super(Sensor, self).__init__()
+        Sensor.__init__(self)
         self.name = "pressure"
-        self.bus = smbus.SMBus(1)
+        #self.bus = smbus.SMBus(1)
+        self.bus = True
 
     def get_data(self):
         self.bus.write_byte_data(0x60, 0x26, 0x39)
