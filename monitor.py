@@ -176,6 +176,8 @@ class Monitor(Daemon):
             #print("Not supported on this OS, setting dummy vars")
             self.sensor_addresses = ['0x40', '0x60', '0x39']
 
+        print(self.sensor_addresses)
+
         for particle in loaded_particle_modules:
             if particle.addr in self.sensor_addresses:
                 print("Found particle: %s" % particle)
