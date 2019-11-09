@@ -317,10 +317,6 @@ class Monitor(Daemon):
                 self.api_server = self.config.get('Server', 'server')
                 if self.config.has_option('Server', 'dev_server'):
                     self.api_server = self.config.get('Server', 'dev_server')
-
-                logger.info("DEV SERVER: %s" % self.config.get('Server', 'dev_server'))
-                logger.info("Server is: %s" % self.api_server)
-
                 if self.config.has_option('RunTime', 'noServer'):
                     self.noServer = self.config.get('RunTime', 'noServer')
                     self.token = "FakeToken"
@@ -337,7 +333,7 @@ class Monitor(Daemon):
         self.config.read('.homesense_init.conf')
         self.api_server = self.config.get('Server', 'server')
         if self.config.has_option('Server', 'dev_server'):
-            self.dev_api_server = self.config.get('Server', 'dev_server')
+            self.api_server = self.config.get('Server', 'dev_server')
         if self.config.has_option('RunTime', 'noServer'):
             self.noServer = self.config.get('RunTime', 'noServer')
             self.token = "FakeToken"
