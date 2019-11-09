@@ -59,7 +59,7 @@ class SGP30():
         time.sleep(15)
         print("Sensor Started")
 
-SGPsensor = None
+SGPsensor = SGP30()
 
 class tvoc():
     def __init__(self):
@@ -79,43 +79,9 @@ class tvoc():
     def get_data(self):
         return self.sgpObject.voc
 
-class co2():
-    # REALLY JANK way to share the threaded sensor bus... but it works for now
-    def __init__(self):
-        # Get the SGP global var (initially set to none)
-        global SGPsensor
-        if SGPsensor:
-            #print("co2- it exists")
-            self.sgpObject = SGPsensor
-        else:
-            #print("co2- it doesn't exist")
-            # If it doesn't exist, create it.
-            SGPsensor = SGP30()
-            self.sgpObject = SGPsensor
-        self.name = "co2"
-
-    def get_name(self):
-        return self.name
-
-    def get_data(self):
-        return self.sgpObject.co2
-
-
-
 def main():
 
-    sensor = co2()
-    print(sensor.name)
-
-
-    sensor2 = tvoc()
-    #print(sensor2.get_data())
-    time.sleep(5)
-    for i in range(1,5):
-        print(sensor.get_data())
-        print(sensor2.get_data())
-        time.sleep(1)
-
+    pass
 
 if __name__ == "__main__":
     main()
