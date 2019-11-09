@@ -9,7 +9,7 @@ class Particle(Sensor):
 
     def __init__(self):
         Sensor.__init__(self)
-        self.name = "light"
+        self.name = "Light"
         self.unit = "lux"
         #self.tsl = TSL2561(debug=1)
         #self.tsl.set_auto_range(16)

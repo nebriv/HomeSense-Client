@@ -14,7 +14,7 @@ class Particle(Sensor):
 
     def __init__(self):
         Sensor.__init__(self)
-        self.name = "pressure"
+        self.name = "Pressure"
         self.unit = "kPa"
         #self.bus = smbus.SMBus(1)
         self.bus = True
