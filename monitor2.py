@@ -142,7 +142,10 @@ class Monitor(Daemon):
         sys.exit(0)
 
     def first_start(self):
-        return True
+        if os.path.isfile("sensor.dat"):
+            return False
+        else:
+            return True
 
     def generate_device_id(self):
         self.device_id = str(uuid.uuid4())
@@ -251,15 +254,19 @@ class Monitor(Daemon):
             pickle.dump(data, outfile)
 
     def load_sensor(self):
-        if os.path.isfile("sensor.dat"):
-            with open('sensor.dat', 'r') as infile:
-                data = pickle.load(infile)
-            self.device_id = data['device_id']
-            for each in data['sensors']:
-                self.particles.append(pickle.loads(each))
-            logger.debug("Loaded sensor data. Device ID: %s" % self.device_id)
-        else:
-            raise FileNotFoundError("Sensor Data not found.")
+        try:
+            if os.path.isfile("sensor.dat"):
+                with open('sensor.dat', 'r') as infile:
+                    data = pickle.load(infile)
+                self.device_id = data['device_id']
+                for each in data['sensors']:
+                    self.particles.append(pickle.loads(each))
+                logger.debug("Loaded sensor data. Device ID: %s" % self.device_id)
+            else:
+                raise FileNotFoundError("Sensor Data not found.")
+        except Exception as err:
+            logger.error("Error loading sensor config: %s" % err)
+            raise ValueError("Error loading sensor config: %s" % err)
 
     def first_time_setup(self):
         logger.info("Running first time setup...")
@@ -287,6 +294,10 @@ class Monitor(Daemon):
             print("Config File Not Found.")
             exit()
 
+    def reset_sensor(self):
+        logger.info("Reseting Sensor")
+        os.remove('sensor.dat')
+
     def run(self):
         logger.debug("Starting Run Statement")
         signal.signal(signal.SIGINT, self.keyboard_interrupt)
@@ -302,7 +313,11 @@ class Monitor(Daemon):
             # Get sensors
             # Save config
         else:
-            self.load_sensor()
+            try:
+                self.load_sensor()
+            except ValueError:
+                self.reset_sensor()
+                self.first_time_setup()
 
 if __name__ == "__main__":
     daemon = Monitor('homesense.pid', verbose=2)
