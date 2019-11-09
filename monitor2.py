@@ -316,8 +316,8 @@ class Monitor(Daemon):
     def get_data(self):
         while True:
             for particle in self.particles:
-                print(particle.get_data())
-            time.sleep(15)
+                print(particle.name, particle.get_data())
+            time.sleep(5)
 
     def run(self):
         logger.debug("Starting Run Statement")
