@@ -34,5 +34,7 @@ class Particle(Sensor):
         pressure = (pres / 4.0) / 1000.0
         return pressure
 
-
+    def setup(self):
+        print("Nothing to setup")
+        return True
 

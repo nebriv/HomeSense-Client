@@ -16,17 +16,14 @@ class Particle(Sensor):
         self.name = "CO2"
         self.unit = "ppm"
 
-        print(SGPsensor.sensor_running)
+        self.sgpObject = SGPsensor
 
-        if SGPsensor.sensor_running:
-            print("SPG Sensor Running")
-            self.sgpObject = SGPsensor
-        else:
-            print("SPG Sensor not running")
             # If it doesn't exist, create it.
             # SGPsensor = sgp30.SGP30()
             # self.sgpObject = SGPsensor
 
+    def setup(self):
+        self.sgpObject.setup()
 
     def get_name(self):
         return self.name

@@ -20,3 +20,7 @@ class Particle(Sensor):
 
     def get_name(self):
         return self.name
+
+    def setup(self):
+        print("Nothing to setup")
+        return True

@@ -276,6 +276,12 @@ class Monitor(Daemon):
             logger.error("Error loading sensor config: %s" % err)
             raise ValueError("Error loading sensor config: %s" % err)
 
+    def initialize_sensors(self):
+        logger.info("Initializing Sensors...")
+        for particle in self.particles:
+            logger.info("Starting %s" % particle.name)
+            particle.setup()
+
     def first_time_setup(self):
         logger.info("Running first time setup...")
         self.generate_device_id()
@@ -327,6 +333,8 @@ class Monitor(Daemon):
             except ValueError:
                 self.reset_sensor()
                 self.first_time_setup()
+                
+        self.initialize_sensors()
 
 if __name__ == "__main__":
     daemon = Monitor('homesense.pid', verbose=2)
