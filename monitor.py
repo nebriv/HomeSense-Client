@@ -120,9 +120,6 @@ class Monitor(Daemon):
             #print("CAUGHT EXCEPTION DURING UPDATES: %s" % err)
 
     def get_sensors(self):
-
-
-
         logger.info("Detecting sensors")
         self.display.update_screen(["Detecting Sensors..."])
         time.sleep(2)
@@ -204,8 +201,6 @@ class Monitor(Daemon):
         self.display.update_screen(["Registering with server:", self.api_server])
         data = {'device_id': self.device_id}
         i = 1
-        if self.dev_api_server:
-            d = requests.get(self.dev_api_server + "/api/sensors/get_token/")
         r = requests.get(self.api_server + "/api/sensors/get_token/")
 
         if r.status_code == 200:
@@ -221,8 +216,6 @@ class Monitor(Daemon):
                 data[each['sensor_name'] + "_name"] = each['name']
                 data[each['sensor_data_unit_name']] = each['sensor_data_unit']
                 data['token'] = self.token
-            if self.dev_api_server:
-                d = requests.post(self.dev_api_server + "/api/sensors/register/", data=data)
             r = requests.post(self.api_server + "/api/sensors/register/", data=data)
             if r.status_code == 201:
                 logger.info("Successfully Registered Sensor")
@@ -322,9 +315,7 @@ class Monitor(Daemon):
                 self.device_id = self.config.get('Server', 'Device_id')
                 self.api_server = self.config.get('Server', 'server')
                 if self.config.has_option('Server', 'dev_server'):
-                    self.dev_api_server = self.config.get('Server', 'dev_server')
-                else:
-                    self.dev_api_server = None
+                    self.api_server = self.config.get('Server', 'dev_server')
 
                 if self.config.has_option('RunTime', 'noServer'):
                     self.noServer = self.config.get('RunTime', 'noServer')
@@ -380,12 +371,6 @@ class Monitor(Daemon):
                 self.display.update_screen(["Uploading Data"])
                 time.sleep(1)
                 if not self.noServer:
-                    if self.dev_api_server:
-                        try:
-                            d = requests.post(self.dev_api_server + '/api/data/add/', data=post_data)
-                        except Exception as err:
-                            logger.error(err)
-                            #print("CAUGHT EXCEPTION: %s" % err)
                     r = requests.post(self.api_server + '/api/data/add/', data=post_data)
                     if r.status_code == 201:
                         logger.debug("Data uploaded")
