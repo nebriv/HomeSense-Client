@@ -241,9 +241,9 @@ class Monitor(Daemon):
             logger.error("Unable to get token from server: %s %s" % (r.status_code, r.text))
             exit()
         try:
-            for each in self.available_sensors:
-                data[each['sensor_name'] + "_name"] = each['name']
-                data[each['sensor_data_unit_name']] = each['sensor_data_unit']
+            for each in self.particles:
+                data[each['sensor_name'] + "_name"] = each.name
+                data[each['sensor_data_unit_name']] = each.unit
                 data['token'] = self.token
             r = requests.post(self.api_server + "/api/sensors/register/", data=data)
             if r.status_code == 201:
