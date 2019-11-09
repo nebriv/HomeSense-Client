@@ -48,6 +48,9 @@ class SGP30():
         self.measuretest = 0x2032
         self.getfeatureset = 0x202f
         self.measuresignals = 0x2050
+
+        print("SGP Address: %s" % self.addr)
+
         self.handle = self.pi.i2c_open(self.bus, self.addr)
         self.pi.i2c_write_device(self.handle, self.init)
         time.sleep(1)

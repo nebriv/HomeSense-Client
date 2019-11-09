@@ -333,7 +333,7 @@ class Monitor(Daemon):
             except ValueError:
                 self.reset_sensor()
                 self.first_time_setup()
-                
+
         self.initialize_sensors()
 
 if __name__ == "__main__":
