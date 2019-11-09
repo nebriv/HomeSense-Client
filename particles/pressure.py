@@ -35,7 +35,6 @@ class Particle(Sensor):
 
     def setup(self):
         self.bus = smbus.SMBus(1)
-        self.bus = True
 
 if __name__ == "__main__":
     test = Particle()
