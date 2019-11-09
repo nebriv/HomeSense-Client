@@ -34,6 +34,7 @@ addr = "0x40"
 
 class HTU21DF():
     def __init__(self):
+        self.sensor_running = False
         pass
 
     def run_sensor(self):
