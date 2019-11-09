@@ -197,8 +197,9 @@ class Monitor(Daemon):
                 logger.debug("%s - %s" % (section, option))
 
     def register(self):
-        logger.info("Registering with server")
+        logger.info("Registering with server: %s" % self.api_server)
         self.display.update_screen(["Registering with server:", self.api_server])
+
         data = {'device_id': self.device_id}
         i = 1
         r = requests.get(self.api_server + "/api/sensors/get_token/")
