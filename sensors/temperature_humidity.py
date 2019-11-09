@@ -35,6 +35,8 @@ print("HI")
 
 class HTU21DF():
     dummyvar = "BEN"
+    sensor_running = False
+
     def __init__(self):
         global addr
         self.addr = addr
