@@ -37,8 +37,6 @@ class HTU21DF():
         global addr
         self.addr = addr
         self.sensor_running = False
-        print(self.sensor_running)
-        print("INIT")
 
     def run_sensor(self):
         while True:
