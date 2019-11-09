@@ -66,29 +66,30 @@ class HTU21DF():
             #print(self.humidity)
 
     def setup(self):
-        print("Initializing HTU21DF Sensor")
-        #print("RUNNING SETUP")
-        self.pi = pigpio.pi()
+        if not self.sensor_running:
+            print("Initializing HTU21DF Sensor")
+            #print("RUNNING SETUP")
+            self.pi = pigpio.pi()
 
-        # HTU21D-F Address
-        self.addr = addr
+            # HTU21D-F Address
+            self.addr = addr
 
-        # i2c bus, if you have a Raspberry Pi Rev A, change this to 0
-        self.bus = 1
+            # i2c bus, if you have a Raspberry Pi Rev A, change this to 0
+            self.bus = 1
 
-        # HTU21D-F Commands
-        self.rdtemp = 0xE3
-        self.rdhumi = 0xE5
-        self.wtreg = 0xE6
-        self.rdreg = 0xE7
-        self.reset = 0xFE
+            # HTU21D-F Commands
+            self.rdtemp = 0xE3
+            self.rdhumi = 0xE5
+            self.wtreg = 0xE6
+            self.rdreg = 0xE7
+            self.reset = 0xFE
 
-        thread1 = Thread(target=self.run_sensor)
-        thread1.daemon = True
-        thread1.start()
-        self.sensor_running = True
-        time.sleep(5)
-        print("Sensor Started")
+            thread1 = Thread(target=self.run_sensor)
+            thread1.daemon = True
+            thread1.start()
+            self.sensor_running = True
+            time.sleep(5)
+            print("Sensor Started")
 
     def htu_reset(self):
         handle = self.pi.i2c_open(self.bus, self.addr) # open i2c bus
