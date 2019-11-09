@@ -2,6 +2,9 @@ class Sensor(object):
     def __init__(self):
         self.name = "Not Implemented"
 
+    def setup(self):
+        return NotImplemented
+
     def get_name(self):
         return self.name
 

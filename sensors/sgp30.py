@@ -3,12 +3,14 @@ import pigpio
 import math
 import binascii
 from struct import unpack
-
 from threading import Thread
 #from .base_sensor import Sensor
 
+addr = 0x58
+
 class SGP30():
     def __init__(self):
+        self.addr = addr
         #super(Sensor).__init__()
         self.setup()
 
@@ -31,7 +33,7 @@ class SGP30():
     def setup(self):
         print("Initializing SGP30 Sensor...")
         self.pi = pigpio.pi()
-        self.addr = 0x58
+
         self.co2 = 0
         self.voc = 0
 

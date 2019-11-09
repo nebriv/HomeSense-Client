@@ -30,6 +30,9 @@ import math
 from threading import Thread
 from .base_sensor import Sensor
 
+
+addr = 0x40
+
 class HTU21DF(Sensor):
     def __init__(self):
         super(Sensor, self).__init__()
@@ -69,7 +72,7 @@ class HTU21DF(Sensor):
         self.pi = pigpio.pi()
 
         # HTU21D-F Address
-        self.addr = 0x40
+        self.addr = addr
 
         # i2c bus, if you have a Raspberry Pi Rev A, change this to 0
         self.bus = 1
@@ -95,8 +98,6 @@ class HTU21DF(Sensor):
         self.pi.i2c_close(handle) # close i2c bus
         time.sleep(0.2) # reset takes 15ms so let's give it some time
 
-
-
 HTU21DFSensor = None
 
 class Temperature():
@@ -121,7 +122,6 @@ class Temperature():
         elif  self.unit == "fahrenheit":
             temperature = 9.0 / 5.0 * self.sensorObject.temperature + 32
             return temperature
-
 
 class Humidity():
     def __init__(self):

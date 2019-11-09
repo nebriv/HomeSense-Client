@@ -50,6 +50,7 @@ Temporary Items
 venv
 .idea
 homesense.conf
+certs/
 
 __pycache__
 homesense.log

@@ -4,23 +4,23 @@
 # from pres_alt import get_pres
 
 import time
-import datetime
 import requests
 import subprocess
 import sys
 import git
-import configparser
-from daemon import Daemon
+from lib.daemon import Daemon
 from configparser import ConfigParser
 import os
 from sensors import lux, pressure_altitude, temperature_humidity, sgp30
 import logging
 import psutil
 import uuid
-from display import Display
+from lib.display import Display
 import signal
+import importlib
+import pkgutil
 
-from web_interface import webserver
+import sensors
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
@@ -95,6 +95,23 @@ def restart_program():
     python = sys.executable
     os.execl(python, python, *sys.argv)
 
+def iter_namespace(ns_pkg):
+    # Specifying the second argument (prefix) to iter_modules makes the
+    # returned name an absolute name instead of a relative one. This allows
+    # import_module to work without having to do additional modification to
+    # the name.
+    return pkgutil.iter_modules(ns_pkg.__path__, ns_pkg.__name__ + ".")
+
+
+for finder, name, ispkg in iter_namespace(sensors):
+    print(finder,name,ispkg)
+    m = __import__(name)
+    print(dir(m))
+
+exit()
+
+
+
 class Monitor(Daemon):
     verbose = 0
 
@@ -112,6 +129,9 @@ class Monitor(Daemon):
             #print("CAUGHT EXCEPTION DURING UPDATES: %s" % err)
 
     def get_sensors(self):
+
+
+
         logger.info("Detecting sensors")
         self.display.update_screen(["Detecting Sensors..."])
         time.sleep(2)
@@ -194,7 +214,7 @@ class Monitor(Daemon):
         data = {'device_id': self.device_id}
         i = 1
         if self.dev_api_server:
-            d = requests.get(self.api_server + "/api/sensors/get_token/")
+            d = requests.get(self.dev_api_server + "/api/sensors/get_token/")
         r = requests.get(self.api_server + "/api/sensors/get_token/")
 
         if r.status_code == 200:
@@ -318,6 +338,7 @@ class Monitor(Daemon):
                 if self.config.has_option('RunTime', 'noServer'):
                     self.noServer = self.config.get('RunTime', 'noServer')
                     self.token = "FakeToken"
+                    print(self.noServer)
                 else:
                     self.noServer = False
 
