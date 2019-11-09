@@ -10,8 +10,8 @@ HTU21DF = temperature_humidity.HTU21DFSensor
 
 class Particle(Sensor):
     def __init__(self):
-        global HTU21DF
         Sensor.__init__(self)
+        global HTU21DF
         self.htuObject = HTU21DF
         print(self.htuObject.dummy_var)
         self.name = "Humidity"

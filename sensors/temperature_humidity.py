@@ -37,6 +37,8 @@ class HTU21DF():
         global addr
         self.addr = addr
         self.sensor_running = False
+        print(self.sensor_running)
+        print("INIT")
 
     def run_sensor(self):
         while True:
@@ -97,4 +99,3 @@ class HTU21DF():
         time.sleep(0.2) # reset takes 15ms so let's give it some time
 
 HTU21DFSensor = HTU21DF()
-print(HTU21DFSensor.sensor_running)
