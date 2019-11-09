@@ -177,10 +177,13 @@ class Monitor(Daemon):
             self.sensor_addresses = ['0x40', '0x60', '0x39']
 
         print(self.sensor_addresses)
-
-        for particle in loaded_particle_modules:
-            if particle.addr in self.sensor_addresses:
-                print("Found particle: %s" % particle)
+        self.particles = []
+        for particle_mod in loaded_particle_modules:
+            if particle_mod.addr in self.sensor_addresses:
+                print("Found particle: %s" % particle_mod)
+                particle = particle_mod()
+                print(particle.id)
+                self.particles.append(particle)
         exit()
 
         i = 1
