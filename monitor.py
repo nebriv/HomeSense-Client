@@ -361,34 +361,18 @@ class Monitor(Daemon):
             logger.info("Trying to read homesense.conf")
             with open('homesense.conf') as f:
                 self.config.read_file(f)
-                self.token = self.config.get('Server', 'Token')
-                self.device_id = self.config.get('Server', 'Device_id')
-                self.api_server = self.config.get('Server', 'server')
-                if self.config.has_option('Server', 'dev_server'):
-                    self.api_server = self.config.get('Server', 'dev_server')
+                self.api_server = self.config.get('HomeSense', 'server')
+                if self.config.has_option('HomeSense', 'dev_server'):
+                    self.api_server = self.config.get('HomeSense', 'dev_server')
                 if self.config.has_option('RunTime', 'noServer'):
                     self.noServer = self.config.get('RunTime', 'noServer')
                     self.token = "FakeToken"
-                    print(self.noServer)
                 else:
                     self.noServer = False
 
         except IOError as err:
-            logger.warning("Config file not found")
-            print("Config File Not Found.")
-
-    def create_initial_config(self):
-        self.config = ConfigParser()
-        self.config.read('.homesense_init.conf')
-        self.api_server = self.config.get('Server', 'server')
-        if self.config.has_option('Server', 'dev_server'):
-            self.api_server = self.config.get('Server', 'dev_server')
-        if self.config.has_option('RunTime', 'noServer'):
-            self.noServer = self.config.get('RunTime', 'noServer')
-            self.token = "FakeToken"
-        else:
-            self.noServer = False
-        self.save_config()
+            logger.error("Config file not found")
+            exit()
 
     def run(self):
         logger.debug("Starting Run Statement")
