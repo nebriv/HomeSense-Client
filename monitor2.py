@@ -316,7 +316,7 @@ class Monitor(Daemon):
     def get_data(self):
         while True:
             for particle in self.particles:
-                print(particle.name, particle.get_data())
+                print(particle.id, particle.name, particle.get_data())
             time.sleep(5)
 
     def run(self):
@@ -331,9 +331,6 @@ class Monitor(Daemon):
         self.loaded_particle_modules = load_all_modules_from_dir("particles")
         if self.first_start():
             self.first_time_setup()
-            # Generate device ID
-            # Get sensors
-            # Save config
         else:
             try:
                 self.load_sensor()
