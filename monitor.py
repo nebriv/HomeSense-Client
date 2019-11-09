@@ -37,17 +37,15 @@ logger.addHandler(fh)
 
 #api_server = "http://192.168.1.161:8000"
 
-# def get_all_subclasses(cls):
-#     all_subclasses = []
-#
-#     for subclass in cls.__subclasses__():
-#         all_subclasses.append(subclass)
-#         all_subclasses.extend(get_all_subclasses(subclass))
-#
-#     return all_subclasses
-#
-# print(get_all_subclasses(base_sensor))
-# exit()
+def get_all_subclasses(cls):
+    all_subclasses = []
+
+    for subclass in cls.__subclasses__():
+        all_subclasses.append(subclass)
+        all_subclasses.extend(get_all_subclasses(subclass))
+
+    return all_subclasses
+
 
 def int_to_en(num):
     d = { 0 : 'zero', 1 : 'one', 2 : 'two', 3 : 'three', 4 : 'four', 5 : 'five',
@@ -273,6 +271,11 @@ class Monitor(Daemon):
         self.sensors.append(sgp30.co2())
         self.sensors.append(sgp30.tvoc())
         self.display.update_screen(["All sensors running"])
+
+
+        print(get_all_subclasses(base_sensor))
+        logger.debug(get_all_subclasses(base_sensor))
+        exit()
         time.sleep(2)
 
     def keyboard_interrupt(self, signal, frame):
