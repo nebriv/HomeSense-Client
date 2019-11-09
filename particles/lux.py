@@ -5,7 +5,7 @@ from sensors.base_sensor import Sensor
 
 addr = "0x39"
 
-class Lux(Sensor):
+class Particle(Sensor):
 
     def __init__(self):
         super(Sensor, self).__init__()

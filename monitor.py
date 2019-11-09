@@ -181,7 +181,7 @@ class Monitor(Daemon):
         for particle_mod in loaded_particle_modules:
             if particle_mod.addr in self.sensor_addresses:
                 print("Found particle: %s" % particle_mod)
-                particle = particle_mod()
+                particle = particle_mod.Particle()
                 print(particle.id)
                 self.particles.append(particle)
         exit()
