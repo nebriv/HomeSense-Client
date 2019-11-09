@@ -26,7 +26,7 @@ import pkgutil
 import pkgutil
 import sys
 import sensors
-
+import pickle
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
 
@@ -57,7 +57,6 @@ def load_all_modules_from_dir(dirname):
         if full_package_name not in sys.modules:
             module = importer.find_module(package_name
                         ).load_module(package_name)
-            print(module)
             modules.append(module)
     return modules
 
@@ -144,6 +143,27 @@ class Monitor(Daemon):
             logger.error(err)
             #print("CAUGHT EXCEPTION DURING UPDATES: %s" % err)
 
+    def save_particles(self):
+        pickled = []
+        for each in self.particles:
+            pickled.append(pickle.dumps(each))
+
+        return pickled
+
+    def save_sensor(self):
+        data = {"device_id": self.device_id, "sensors": self.save_particles()}
+        with open("sensor.dat", 'wb') as outfile:
+            pickle.dump(data, outfile)
+
+    def load_sensor(self):
+        if os.path.isfile("sensor.dat"):
+            with open('sensor.dat', 'r') as infile:
+                data = pickle.load(infile)
+            self.device_id = data['device_id']
+        else:
+            raise FileNotFoundError("Sensor Data not found.")
+
+
     def get_sensors(self):
         logger.info("Loading available particles...")
         loaded_particle_modules = load_all_modules_from_dir("particles")
@@ -176,48 +196,15 @@ class Monitor(Daemon):
             #print("Not supported on this OS, setting dummy vars")
             self.sensor_addresses = ['0x40', '0x60', '0x39']
 
-        print(self.sensor_addresses)
+        logger.debug("Found sensor addresses: %s" % " ".join(self.sensor_addresses))
         self.particles = []
         for particle_mod in loaded_particle_modules:
             if particle_mod.addr in self.sensor_addresses:
-
                 particle = particle_mod.Particle()
-                print("Found particle: %s" % particle.name)
+                logger.info("Found particle: %s" % particle.name)
                 self.particles.append(particle)
 
-        print(self.particles)
-        exit()
-
-        # for sensor_address in self.config.items('SensorAddresses'):
-        #     if sensor_address[1] in self.sensor_addresses:
-        #         #print(sensor_address)
-        #         try:
-        #             unit = self.config.get('SensorUnits', sensor_address[0])
-        #             #print(unit)
-        #         except Exception as e:
-        #             if "No option" in str(e):
-        #                 logger.warning("No unit for %s sensor" % sensor_address[1])
-        #                 #print("No unit set")
-        #                 unit = "Unknown"
-        #
-        #         self.available_sensors.append({'sensor_name': "sensor_%s" % int_to_en(i),
-        #                                        'name': sensor_address[0],
-        #                                        'sensor_data_unit_name': "sensor_%s_data_unit" % int_to_en(i),
-        #                                        'sensor_data_unit': unit,
-        #                                        'address': sensor_address[1],
-        #                                        "particle_id": str(uuid.uuid4())})
-        #         i += 1
-        # line = ""
-        # for each in self.available_sensors:
-        #     line += "%s " % each['name']
-        # self.display.update_screen(["Found Sensors:", line])
-        # time.sleep(4)
-        # #print(self.available_sensors)
-        # logger.debug("Found sensors: %s" % self.available_sensors)
-        # #exit()
-
-    def save_sensors(self):
-        pass
+        self.save_particles()
 
     def log(self, *args):
         if self.verbose >= 1:
@@ -418,6 +405,9 @@ class Monitor(Daemon):
         else:
             self.load_config()
             self.get_sensors()
+
+        self.save_sensor()
+        self.load_sensor()
 
         self.initialize_sensors()
 
