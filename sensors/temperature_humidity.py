@@ -33,9 +33,8 @@ from .base_sensor import Sensor
 
 addr = 0x40
 
-class HTU21DF(Sensor):
+class HTU21DF():
     def __init__(self):
-        super(Sensor, self).__init__()
         self.setup()
 
     def run_sensor(self):
@@ -64,7 +63,6 @@ class HTU21DF(Sensor):
             self.humidity = ((25 - self.temperature) * -0.15) + uncomp_humidity
             #print(self.temperature)
             #print(self.humidity)
-
 
     def setup(self):
         print("Initializing HTU21DF Sensor")
@@ -100,9 +98,10 @@ class HTU21DF(Sensor):
 
 HTU21DFSensor = None
 
-class Temperature():
+class Temperature(Sensor):
     def __init__(self):
         global HTU21DFSensor
+        super(Sensor, self).__init__()
         if HTU21DFSensor:
             #print("voc- it exists")
             self.sensorObject = HTU21DFSensor
@@ -123,9 +122,10 @@ class Temperature():
             temperature = 9.0 / 5.0 * self.sensorObject.temperature + 32
             return temperature
 
-class Humidity():
+class Humidity(Sensor):
     def __init__(self):
         global HTU21DFSensor
+        super(Sensor, self).__init__()
         if HTU21DFSensor:
             #print("voc- it exists")
             self.sensorObject = HTU21DFSensor

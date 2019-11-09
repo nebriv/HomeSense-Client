@@ -12,6 +12,7 @@ from lib.daemon import Daemon
 from configparser import ConfigParser
 import os
 from sensors import lux, pressure_altitude, temperature_humidity, sgp30
+from sensors import base_sensor
 import logging
 import psutil
 import uuid
@@ -35,6 +36,18 @@ fh.setFormatter(formatter)
 logger.addHandler(fh)
 
 #api_server = "http://192.168.1.161:8000"
+
+def get_all_subclasses(cls):
+    all_subclasses = []
+
+    for subclass in cls.__subclasses__():
+        all_subclasses.append(subclass)
+        all_subclasses.extend(get_all_subclasses(subclass))
+
+    return all_subclasses
+
+print(get_all_subclasses(base_sensor))
+exit()
 
 def int_to_en(num):
     d = { 0 : 'zero', 1 : 'one', 2 : 'two', 3 : 'three', 4 : 'four', 5 : 'five',
@@ -178,6 +191,8 @@ class Monitor(Daemon):
         logger.debug("Found sensors: %s" % self.available_sensors)
         #exit()
 
+    def save_sensors(self):
+        pass
 
     def log(self, *args):
         if self.verbose >= 1:
@@ -247,7 +262,6 @@ class Monitor(Daemon):
             logger.error("Unable to register particle with server: %s" % (err))
             exit()
 
-
     def initialize_sensors(self):
         logger.info("Initializing Sensors")
         self.display.update_screen(["Initializing Sensors"])
@@ -294,7 +308,6 @@ class Monitor(Daemon):
         #print("Initializing HomeSense Monitor...")
         self.generate_device_id()
         if not self.noServer:
-
             logger.info("Device ID: %s" % self.device_id)
             #print("Device ID: %s" % self.device_id)
             self.config.set('Server', 'device_id', str(self.device_id))

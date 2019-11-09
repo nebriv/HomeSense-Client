@@ -29,7 +29,6 @@ class SGP30():
             #print("TVOC: %i" % self.voc)
             time.sleep(.6)
 
-
     def setup(self):
         print("Initializing SGP30 Sensor...")
         self.pi = pigpio.pi()
