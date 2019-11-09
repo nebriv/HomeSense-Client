@@ -18,11 +18,8 @@ class Particle(Sensor):
 
         self.sgpObject = SGPsensor
 
-            # If it doesn't exist, create it.
-            # SGPsensor = sgp30.SGP30()
-            # self.sgpObject = SGPsensor
-
     def setup(self):
+        print(self.sgpObject.sensor_running)
         self.sgpObject.setup()
 
     def get_name(self):
