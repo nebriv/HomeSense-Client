@@ -3,6 +3,8 @@ from time import sleep
 import pigpio
 from .base_sensor import Sensor
 
+addr = 0x39
+
 class Lux(Sensor):
 
     def __init__(self):

@@ -11,8 +11,11 @@ import git
 from lib.daemon import Daemon
 from configparser import ConfigParser
 import os
-from sensors import lux, pressure_altitude, temperature_humidity, sgp30
-from sensors import base_sensor
+# from sensors import lux, pressure_altitude, temperature_humidity, sgp30
+# from sensors import base_sensor
+#
+import sensors
+
 import logging
 import psutil
 import uuid
@@ -20,7 +23,8 @@ from lib.display import Display
 import signal
 import importlib
 import pkgutil
-
+import pkgutil
+import sys
 import sensors
 
 logger = logging.getLogger(__name__)
@@ -46,6 +50,16 @@ def get_all_subclasses(cls):
 
     return all_subclasses
 
+def load_all_modules_from_dir(dirname):
+    modules = []
+    for importer, package_name, _ in pkgutil.iter_modules([dirname]):
+        full_package_name = '%s.%s' % (dirname, package_name)
+        if full_package_name not in sys.modules:
+            module = importer.find_module(package_name
+                        ).load_module(full_package_name)
+            print(module)
+            modules.append(module)
+    return modules
 
 def int_to_en(num):
     d = { 0 : 'zero', 1 : 'one', 2 : 'two', 3 : 'three', 4 : 'four', 5 : 'five',
@@ -131,6 +145,12 @@ class Monitor(Daemon):
             #print("CAUGHT EXCEPTION DURING UPDATES: %s" % err)
 
     def get_sensors(self):
+        logger.info("Loading available particles...")
+        particles = load_all_modules_from_dir("sensors")
+        print(particles)
+        exit()
+
+
         logger.info("Detecting sensors")
         self.display.update_screen(["Detecting Sensors..."])
         time.sleep(2)
