@@ -31,37 +31,36 @@ class SGP30():
             time.sleep(.6)
 
     def setup(self):
-        print("Initializing SGP30 Sensor...")
-        self.pi = pigpio.pi()
+        if not self.sensor_running:
+            print("Initializing SGP30 Sensor...")
+            self.pi = pigpio.pi()
 
-        self.co2 = 0
-        self.voc = 0
+            self.co2 = 0
+            self.voc = 0
 
-        # i2c bus, if you have a Raspberry Pi Rev A, change this to 0
-        self.bus = 1
+            # i2c bus, if you have a Raspberry Pi Rev A, change this to 0
+            self.bus = 1
 
-        # HTU21D-F Commands
-        self.init = b"\x20\x03"
-        self.measureair = b"\x20\x08"
-        self.getbaseline = 0x2015
-        self.setbaseline = 0x201e
-        self.measuretest = 0x2032
-        self.getfeatureset = 0x202f
-        self.measuresignals = 0x2050
+            # HTU21D-F Commands
+            self.init = b"\x20\x03"
+            self.measureair = b"\x20\x08"
+            self.getbaseline = 0x2015
+            self.setbaseline = 0x201e
+            self.measuretest = 0x2032
+            self.getfeatureset = 0x202f
+            self.measuresignals = 0x2050
 
-        print("SGP Address: %s" % self.addr)
+            self.handle = self.pi.i2c_open(self.bus, self.addr)
+            self.pi.i2c_write_device(self.handle, self.init)
+            time.sleep(1)
+            self.pi.i2c_write_device(self.handle, self.measureair)
 
-        self.handle = self.pi.i2c_open(self.bus, self.addr)
-        self.pi.i2c_write_device(self.handle, self.init)
-        time.sleep(1)
-        self.pi.i2c_write_device(self.handle, self.measureair)
-
-        thread1 = Thread(target=self.run_sensor)
-        thread1.daemon = True
-        thread1.start()
-        self.sensor_running = True
-        time.sleep(15)
-        print("Sensor Started")
+            thread1 = Thread(target=self.run_sensor)
+            thread1.daemon = True
+            thread1.start()
+            self.sensor_running = True
+            time.sleep(15)
+            print("Sensor Started")
 
 SGPsensor = SGP30()
 
