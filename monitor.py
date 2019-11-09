@@ -56,7 +56,7 @@ def load_all_modules_from_dir(dirname):
         full_package_name = '%s.%s' % (dirname, package_name)
         if full_package_name not in sys.modules:
             module = importer.find_module(package_name
-                        ).load_module(full_package_name)
+                        ).load_module(package_name)
             print(module)
             modules.append(module)
     return modules
