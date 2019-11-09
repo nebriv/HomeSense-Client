@@ -3,7 +3,7 @@ from time import sleep
 import pigpio
 from sensors.base_sensor import Sensor
 from sensors import sgp30
-
+import time
 addr = 0x58
 SGPsensor = sgp30.SGPsensor
 
@@ -19,8 +19,9 @@ class Particle(Sensor):
         self.sgpObject = SGPsensor
 
     def setup(self):
-        print(self.sgpObject.sensor_running)
-        self.sgpObject.setup()
+        time.sleep(.1)
+        if not self.sgpObject.sensor_running:
+            self.sgpObject.setup()
 
     def get_name(self):
         return self.name

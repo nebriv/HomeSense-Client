@@ -11,8 +11,8 @@ class Particle(Sensor):
         Sensor.__init__(self)
         self.name = "Light"
         self.unit = "lux"
-        #self.tsl = TSL2561(debug=1)
-        #self.tsl.set_auto_range(16)
+        self.tsl = TSL2561(debug=1)
+        self.tsl.set_auto_range(16)
 
     def get_data(self):
         #return 54

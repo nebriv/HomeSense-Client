@@ -312,6 +312,10 @@ class Monitor(Daemon):
         logger.info("Reseting Sensor")
         os.remove('sensor.dat')
 
+    def get_data(self):
+        for particle in self.particles:
+            print(particle.get_data())
+
     def run(self):
         logger.debug("Starting Run Statement")
         signal.signal(signal.SIGINT, self.keyboard_interrupt)
