@@ -63,28 +63,3 @@ class SGP30():
             print("Sensor Started")
 
 SGPsensor = SGP30()
-
-class tvoc():
-    def __init__(self):
-        global SGPsensor
-        if SGPsensor:
-            #print("voc- it exists")
-            self.sgpObject = SGPsensor
-        else:
-            #print("voc- it doesn't exist")
-            SGPsensor = SGP30()
-            self.sgpObject = SGPsensor
-        self.name = "tvoc"
-
-    def get_name(self):
-        return self.name
-
-    def get_data(self):
-        return self.sgpObject.voc
-
-def main():
-
-    pass
-
-if __name__ == "__main__":
-    main()
