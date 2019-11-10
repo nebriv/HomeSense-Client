@@ -151,54 +151,55 @@ class Monitor(Daemon):
         self.device_id = str(uuid.uuid4())
 
     def register(self):
-        logger.info("Registering with server: %s" % self.api_server)
-        self.display.update_screen(["Registering with server:", self.api_server])
-        return True
-        data = {'device_id': self.device_id}
-        i = 1
-        r = requests.get(self.api_server + "/api/sensors/get_token/")
+        if self.homesense_enabled:
+            logger.info("Registering with HomeSense server: %s" % self.api_server)
+            self.display.update_screen(["Registering with server:", self.api_server])
+            return True
+            data = {'device_id': self.device_id}
+            i = 1
+            r = requests.get(self.api_server + "/api/sensors/get_token/")
 
-        if r.status_code == 200:
-            logger.info("Received sensor token from server")
-            self.token = r.json()['token']
-            self.config.set("Server", "token", self.token)
-        else:
-            #print(r.status_code, r.text)
-            logger.error("Unable to get token from server: %s %s" % (r.status_code, r.text))
-            exit()
-        try:
-            for each in self.particles:
-                data[each['sensor_name'] + "_name"] = each.name
-                data[each['sensor_data_unit_name']] = each.unit
-                data['token'] = self.token
-            r = requests.post(self.api_server + "/api/sensors/register/", data=data)
-            if r.status_code == 201:
-                logger.info("Successfully Registered Sensor")
+            if r.status_code == 200:
+                logger.info("Received sensor token from server")
+                self.token = r.json()['token']
+                self.config.set("Server", "token", self.token)
             else:
                 #print(r.status_code, r.text)
-                logger.error("Unable to register with server: %s %s" % (r.status_code, r.text))
+                logger.error("Unable to get token from server: %s %s" % (r.status_code, r.text))
                 exit()
-        except Exception as err:
-            logger.error("Unable to register with server: %s" % (err))
-            exit()
-
-        try:
-            for each in self.particles:
-                data = {"device_id": self.device_id,
-                        "particle_name": each.name,
-                        "particle_id": each.id,
-                        "particle_unit": each.unit}
-                logger.debug("Uploading registering particle: %s" % data)
-                r = requests.post(self.api_server + "/api/sensors/add_particle/", data=data)
+            try:
+                for each in self.particles:
+                    data[each['sensor_name'] + "_name"] = each.name
+                    data[each['sensor_data_unit_name']] = each.unit
+                    data['token'] = self.token
+                r = requests.post(self.api_server + "/api/sensors/register/", data=data)
                 if r.status_code == 201:
-                    logger.info("Successfully Registered Particle %s" % each['name'])
+                    logger.info("Successfully Registered Sensor")
                 else:
                     #print(r.status_code, r.text)
-                    logger.error("Unable to register particle with server: %s %s" % (r.status_code, r.text))
+                    logger.error("Unable to register with server: %s %s" % (r.status_code, r.text))
                     exit()
-        except Exception as err:
-            logger.error("Unable to register particle with server: %s" % (err))
-            exit()
+            except Exception as err:
+                logger.error("Unable to register with server: %s" % (err))
+                exit()
+
+            try:
+                for each in self.particles:
+                    data = {"device_id": self.device_id,
+                            "particle_name": each.name,
+                            "particle_id": each.id,
+                            "particle_unit": each.unit}
+                    logger.debug("Uploading registering particle: %s" % data)
+                    r = requests.post(self.api_server + "/api/sensors/add_particle/", data=data)
+                    if r.status_code == 201:
+                        logger.info("Successfully Registered Particle %s" % each['name'])
+                    else:
+                        #print(r.status_code, r.text)
+                        logger.error("Unable to register particle with server: %s %s" % (r.status_code, r.text))
+                        exit()
+            except Exception as err:
+                logger.error("Unable to register particle with server: %s" % (err))
+                exit()
 
     def get_sensors(self):
         logger.info("Loading available particles...")
@@ -296,13 +297,15 @@ class Monitor(Daemon):
             logger.info("Trying to read homesense.conf")
             with open('homesense.conf') as f:
                 self.config.read_file(f)
-                self.api_server = self.config.get('HomeSense', 'server')
-                if self.config.has_option('HomeSense', 'dev_server'):
-                    self.api_server = self.config.get('HomeSense', 'dev_server')
-                if self.config.has_option('HomeSense', 'noServer'):
-                    self.noServer = self.config.get('HomeSense', 'noServer')
-                else:
-                    self.noServer = False
+                if self.config.has_section("HomeSense"):
+                    self.homesense_enabled = True
+                    self.api_server = self.config.get('HomeSense', 'server')
+                    if self.config.has_option('HomeSense', 'dev_server'):
+                        self.api_server = self.config.get('HomeSense', 'dev_server')
+                    if self.config.has_option('HomeSense', 'noServer'):
+                        self.noServer = self.config.get('HomeSense', 'noServer')
+                    else:
+                        self.noServer = False
 
         except IOError as err:
             logger.warning("Config file not found")
@@ -313,10 +316,17 @@ class Monitor(Daemon):
         logger.info("Reseting Sensor")
         os.remove('sensor.dat')
 
+    def upload_homesense_data(self, data):
+        logger.info("Uploading data...")
+        r = requests.post(self.api_server + "/api/data/add/", data=data)
+        print(r.text)
+
     def get_data(self):
         while True:
             for particle in self.particles:
                 print(particle.id, particle.name, particle.get_data())
+                data = {"particle_id": particle.id, "device_id": self.device_id, "sensor_data": particle.get_data()}
+                self.upload_homesense_data(data)
             time.sleep(5)
 
     def run(self):
