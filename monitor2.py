@@ -1,24 +1,23 @@
 import time
+import datetime
 import requests
 import subprocess
-import sys
 import git
 from lib.daemon import Daemon
 from configparser import ConfigParser
 import os
-import sensors
-
+from threading import Thread
 import logging
 import psutil
 import uuid
 from lib.display import Display
 import signal
-import importlib
-import pkgutil
 import pkgutil
 import sys
-import sensors
 import pickle
+
+
+
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
 
@@ -114,12 +113,31 @@ def iter_namespace(ns_pkg):
     # the name.
     return pkgutil.iter_modules(ns_pkg.__path__, ns_pkg.__name__ + ".")
 
-
 class Monitor(Daemon):
     particles = []
     device_id = None
     sensor_addresses = []
+    run_time = 0
+    start_time = None
 
+    def device_clock(self):
+        while True:
+            if self.start_time == None:
+                self.start_time = datetime.datetime.now()
+            else:
+                now = datetime.datetime.now()
+                self.run_time = (now - self.start_time).total_seconds()
+
+            if self.run_time > 30:
+                self.display.dim()
+
+            time.sleep(5)
+
+    def start_device_clock(self):
+        thread1 = Thread(target=self.device_clock())
+        thread1.daemon = True
+        thread1.start()
+        return True
 
     def check_for_updates(self):
         try:
@@ -341,6 +359,7 @@ class Monitor(Daemon):
 
 
     def run(self):
+        self.start_device_clock()
         logger.debug("Starting Run Statement")
         signal.signal(signal.SIGINT, self.keyboard_interrupt)
         self.display = Display()
