@@ -180,7 +180,7 @@ class Monitor(Daemon):
             except Exception as err:
                 logger.error("Unable to register with server: %s" % (err))
                 exit()
-
+            exit()
             try:
                 for each in self.particles:
                     data = {"device_id": self.device_id,
@@ -188,9 +188,10 @@ class Monitor(Daemon):
                             "particle_id": each.id,
                             "particle_unit": each.unit}
                     logger.debug("Uploading registering particle: %s" % data)
+                    print(data)
                     r = requests.post(self.api_server + "/api/sensors/add_particle/", data=data)
                     print(r.status_code)
-                    print(r.text)
+
                     if r.status_code == 201:
                         logger.info("Successfully Registered Particle %s" % each['name'])
                     else:
