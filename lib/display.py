@@ -34,7 +34,7 @@ class Display:
     def __init__(self):
         if import_success:
             serial = i2c(port=1, address=0x3C)
-            self.disp = ssd1306(serial, rotate=1)
+            self.disp = ssd1306(serial, rotate=0)
             self.disp.clear()
             # self.disp.begin()
             # self.disp.clear()
