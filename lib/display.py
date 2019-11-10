@@ -2,7 +2,7 @@ try:
     from PIL import Image
     from PIL import ImageDraw
     from PIL import ImageFont
-    import Adafruit_SSD1306
+    import adafruit_ssd1306
     import_success = True
 except ImportError:
     import_success = False
@@ -25,7 +25,7 @@ class Display:
     RST = 24
     def __init__(self):
         if import_success:
-            self.disp = Adafruit_SSD1306.SSD1306_128_32(rst=self.RST)
+            self.disp = adafruit_ssd1306.SSD1306_128_32(rst=self.RST)
             self.disp.begin()
             self.disp.clear()
             self.disp.display()
