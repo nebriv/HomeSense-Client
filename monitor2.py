@@ -159,7 +159,7 @@ class Monitor(Daemon):
             logger.error(err)
             #print("CAUGHT EXCEPTION DURING UPDATES: %s" % err)
 
-        self.add_scheduled_task(self.check_for_updates, 30)
+        self.add_scheduled_task(self.check_for_updates, 600)
 
     def keyboard_interrupt(self, signal, frame):
         logger.info("Keyboard Interrupt - Shutting Down")
@@ -356,7 +356,6 @@ class Monitor(Daemon):
             time.sleep(1)
             sleeptime -= 1
 
-
     def get_data(self):
         while True:
             self.display.update_screen(["Collecting Data..."])
@@ -366,7 +365,6 @@ class Monitor(Daemon):
                 data = {"particle_id": particle.id, "device_id": self.device_id, "particle_data": particle.get_data(), "token": self.token}
                 self.upload_homesense_data(data)
             self.wait()
-
 
     def run(self):
         self.start_device_clock()
@@ -389,7 +387,7 @@ class Monitor(Daemon):
                 self.reset_sensor()
                 self.first_time_setup()
 
-        self.add_scheduled_task(self.check_for_updates, 10)
+        self.add_scheduled_task(self.check_for_updates, 600)
         self.add_scheduled_task(self.display.dim, 30)
         t = Thread(target=self.scheduler.run)
         t.start()

@@ -87,7 +87,7 @@ class Display:
             #line length
             n = 100
             for line in message:
-                formatted_lines += wrap(line, 40)
+                formatted_lines += wrap(line, 20)
                 #print(formatted_lines)
 
             for line in formatted_lines:
