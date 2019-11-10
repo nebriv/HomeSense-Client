@@ -189,6 +189,8 @@ class Monitor(Daemon):
                             "particle_unit": each.unit}
                     logger.debug("Uploading registering particle: %s" % data)
                     r = requests.post(self.api_server + "/api/sensors/add_particle/", data=data)
+                    print(r.status_code)
+                    print(r.text)
                     if r.status_code == 201:
                         logger.info("Successfully Registered Particle %s" % each['name'])
                     else:
