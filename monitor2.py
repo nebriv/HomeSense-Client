@@ -180,7 +180,7 @@ class Monitor(Daemon):
             except Exception as err:
                 logger.error("Unable to register with server: %s" % (err))
                 exit()
-            exit()
+
             try:
                 for each in self.particles:
                     data = {"device_id": self.device_id,
