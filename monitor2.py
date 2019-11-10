@@ -323,6 +323,7 @@ class Monitor(Daemon):
     def wait(self, sleeptime=120):
         while sleeptime > 0:
             logger.debug("Sleeping for %s seconds..." % time)
+            self.display.update_screen(["Sleeping for %s seconds..." % time])
             time.sleep(sleeptime)
             sleeptime -= 1
 
@@ -335,7 +336,6 @@ class Monitor(Daemon):
                 logger.info("Getting data...")
                 data = {"particle_id": particle.id, "device_id": self.device_id, "particle_data": particle.get_data(), "token": self.token}
                 self.upload_homesense_data(data)
-            self.display.update_screen(["Sleeping..."])
             self.wait()
 
 
