@@ -34,7 +34,7 @@ class Display:
     def __init__(self):
         if import_success:
             serial = i2c(port=1, address=0x3C)
-            self.disp = ssd1306(serial, rotate=0)
+            self.disp = ssd1306(serial, rotate=0, height=32, width=128)
             self.disp.clear()
             # self.disp.begin()
             # self.disp.clear()
@@ -89,9 +89,8 @@ class Display:
             #line length
             n = 100
             for line in message:
-                formatted_lines += wrap(line, 20)
+                formatted_lines += wrap(line, 40)
                 #print(formatted_lines)
-
 
             for line in formatted_lines:
                 draw.text((x, top + line_break),    line,  font=font, fill=200)
