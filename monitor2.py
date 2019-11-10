@@ -158,6 +158,8 @@ class Monitor(Daemon):
             logger.error(err)
             #print("CAUGHT EXCEPTION DURING UPDATES: %s" % err)
 
+        self.add_scheduled_task(self.check_for_updates, 10)
+
     def keyboard_interrupt(self, signal, frame):
         logger.info("Keyboard Interrupt - Shutting Down")
         self.display.update_screen(["Shutting Down!"])
@@ -367,8 +369,6 @@ class Monitor(Daemon):
 
     def run(self):
         self.start_device_clock()
-        self.add_scheduled_task(self.check_for_updates, 60)
-        self.add_scheduled_task(self.display.dim, 30)
         self.scheduler.run(False)
         logger.debug("Starting Run Statement")
         signal.signal(signal.SIGINT, self.keyboard_interrupt)
@@ -388,8 +388,12 @@ class Monitor(Daemon):
                 self.reset_sensor()
                 self.first_time_setup()
 
+        self.add_scheduled_task(self.check_for_updates, 10)
+        self.add_scheduled_task(self.display.dim, 30)
+
         self.initialize_sensors()
         self.get_data()
+
 
 if __name__ == "__main__":
     daemon = Monitor('homesense.pid', verbose=2)
