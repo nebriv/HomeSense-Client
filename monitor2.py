@@ -322,8 +322,8 @@ class Monitor(Daemon):
         #print(r.text)
 
     def wait(self, sleeptime=120):
+        logger.info("Sleeping for %s seconds..." % sleeptime)
         while sleeptime > 0:
-            logger.debug("Sleeping for %s seconds..." % sleeptime)
             self.display.update_screen(["Sleeping for %s seconds..." % sleeptime])
             time.sleep(1)
             sleeptime -= 1

@@ -6,13 +6,11 @@ from sensors import temperature_humidity
 import time
 
 addr = 0x40
-HTU21DF = temperature_humidity.HTU21DFSensor
+
 
 class Particle(Sensor):
     def __init__(self):
         Sensor.__init__(self)
-        global HTU21DF
-        self.htuObject = HTU21DF
         self.name = "Humidity"
         self.unit = "fahrenheit"
 
@@ -20,9 +18,9 @@ class Particle(Sensor):
         return self.name
 
     def get_data(self):
-        return self.htuObject.humidity
+        return temperature_humidity.HTU21DFSensor.humidity
 
     def setup(self):
         time.sleep(.1)
-        if not self.htuObject.sensor_running:
-            self.htuObject.setup()
+        if not temperature_humidity.HTU21DFSensor.sensor_running:
+            temperature_humidity.HTU21DFSensor.setup()
