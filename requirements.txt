@@ -22,3 +22,4 @@ Werkzeug==0.14.1
 smbus
 pillow
 luma.oled
+adafruit-circuitpython-sgp30

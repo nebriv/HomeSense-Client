@@ -5,6 +5,9 @@ import binascii
 from struct import unpack
 from threading import Thread
 #from .base_sensor import Sensor
+import busio
+import adafruit_sgp30
+import board
 
 addr = 0x58
 
@@ -13,23 +16,32 @@ class SGP30():
         global addr
         self.addr = addr
         self.sensor_running = False
+        i2c_bus = busio.I2C(board.SCL, board.SDA, frequency = 100000)
+        self.sgp30 = adafruit_sgp30.Adafruit_SGP30(i2c_bus)
         #super(Sensor).__init__()
         #self.setup()
 
+    def get_data(self):
+        return(self.sgp30.iaq_measure())
+
     def run_sensor(self):
-        while True:
-            self.pi.i2c_write_device(self.handle, self.measureair)
-            time.sleep(.2)
-            count, data = self.pi.i2c_read_device(self.handle,6)
+        pass
+        #while True:
+            #self.pi.i2c_write_device(self.handle, self.measureair)
+            #time.sleep(.2)
+            #count, data = self.pi.i2c_read_device(self.handle,6)
             #print(count, data)
             #self.co2 = int.from_bytes(data[0:2], byteorder='big')
             #self.voc = int.from_bytes(data[3:4], byteorder='big')
-            self.co2 = int(str(data[0:2]).encode('hex'), 16)
-            self.voc = int(str(data[3:4]).encode('hex'), 16)
+
+            #self.co2 = int(str(data[0:2]).encode('hex'), 16)
+            #self.voc = int(str(data[3:4]).encode('hex'), 16)
+
+
             #print(self.co2)
             #print("Co2: %i" % self.co2)
             #print("TVOC: %i" % self.voc)
-            time.sleep(.6)
+            #time.sleep(.6)
 
     def setup(self):
         if not self.sensor_running:
@@ -64,3 +76,4 @@ class SGP30():
             print("Sensor Started")
 
 SGPsensor = SGP30()
+print(SGPsensor.get_data())
