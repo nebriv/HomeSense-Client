@@ -33,7 +33,6 @@ class SGP30():
     def setup(self):
         if not self.sensor_running:
             print("Initializing SGP30 Sensor...")
-            self.sgp30.set_iaq_baseline(0x8973, 0x8aae)
             time.sleep(10)
             print("Sensor Started")
 
