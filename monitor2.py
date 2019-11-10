@@ -369,7 +369,7 @@ class Monitor(Daemon):
 
     def run(self):
         self.start_device_clock()
-        self.scheduler.run(False)
+        self.scheduler.run(blocking=False)
         logger.debug("Starting Run Statement")
         signal.signal(signal.SIGINT, self.keyboard_interrupt)
         self.display = Display()
