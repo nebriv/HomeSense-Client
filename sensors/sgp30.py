@@ -23,63 +23,19 @@ class SGP30():
         i2c = busio.I2C(board.SCL, board.SDA, frequency=100000)
         self.sgp30 = adafruit_sgp30.Adafruit_SGP30(i2c)
         self.sgp30.iaq_init()
-        #self.sgp30.set_iaq_baseline(0x8973, 0x8aae)
-        #super(Sensor).__init__()
-        #self.setup()
 
     def get_data(self):
         return(self.sgp30.eCO2, self.sgp30.TVOC)
 
     def run_sensor(self):
         pass
-        #while True:
-            #self.pi.i2c_write_device(self.handle, self.measureair)
-            #time.sleep(.2)
-            #count, data = self.pi.i2c_read_device(self.handle,6)
-            #print(count, data)
-            #self.co2 = int.from_bytes(data[0:2], byteorder='big')
-            #self.voc = int.from_bytes(data[3:4], byteorder='big')
-
-            #self.co2 = int(str(data[0:2]).encode('hex'), 16)
-            #self.voc = int(str(data[3:4]).encode('hex'), 16)
-
-
-            #print(self.co2)
-            #print("Co2: %i" % self.co2)
-            #print("TVOC: %i" % self.voc)
-            #time.sleep(.6)
 
     def setup(self):
         if not self.sensor_running:
             print("Initializing SGP30 Sensor...")
-            self.pi = pigpio.pi()
-
-            self.co2 = 0
-            self.voc = 0
-
-            # i2c bus, if you have a Raspberry Pi Rev A, change this to 0
-            self.bus = 1
-
-            # HTU21D-F Commands
-            self.init = b"\x20\x03"
-            self.measureair = b"\x20\x08"
-            self.getbaseline = 0x2015
-            self.setbaseline = 0x201e
-            self.measuretest = 0x2032
-            self.getfeatureset = 0x202f
-            self.measuresignals = 0x2050
-
-            self.handle = self.pi.i2c_open(self.bus, self.addr)
-            self.pi.i2c_write_device(self.handle, self.init)
-            time.sleep(1)
-            self.pi.i2c_write_device(self.handle, self.measureair)
-
-            thread1 = Thread(target=self.run_sensor)
-            thread1.daemon = True
-            thread1.start()
-            self.sensor_running = True
-            time.sleep(15)
+            self.sgp30.set_iaq_baseline(0x8973, 0x8aae)
+            time.sleep(10)
             print("Sensor Started")
 
 SGPsensor = SGP30()
-print(SGPsensor.get_data())
+
