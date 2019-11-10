@@ -8,6 +8,9 @@ except ImportError:
     import_success = False
 from textwrap import wrap
 import logging
+import board
+import busio
+
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
@@ -25,18 +28,20 @@ class Display:
     RST = 24
     def __init__(self):
         if import_success:
-            self.disp = adafruit_ssd1306.SSD1306_128_32(rst=self.RST)
-            self.disp.begin()
-            self.disp.clear()
-            self.disp.display()
+            i2c = busio.I2C(board.SCL, board.SDA)
+            self.disp = adafruit_ssd1306.SSD1306_I2C(128, 32, i2c)
+            self.disp.fill(0)
+            self.disp.show()
+            # self.disp.begin()
+            # self.disp.clear()
+            # self.disp.display()
         else:
             logger.warning("No display modules found, running in dummy mode")
 
     def clear(self):
         if import_success:
-            self.disp.clear()
-            self.disp.reset()
-            self.disp.display()
+            self.disp.fill(0)
+            self.disp.show()
         else:
             pass
 
@@ -90,7 +95,7 @@ class Display:
                 line_break = 10
             # Display image.
             self.disp.image(image)
-            self.disp.display()
+            self.disp.show()
         else:
             logger.error("Import failed. Missing modules.")
             pass
