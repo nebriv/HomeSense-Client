@@ -291,7 +291,7 @@ class Monitor(Daemon):
     def load_sensor(self):
         try:
             if os.path.isfile("sensor.dat"):
-                with open('sensor.dat', 'r') as infile:
+                with open('sensor.dat', 'rb') as infile:
                     data = pickle.load(infile)
                 self.device_id = data['device_id']
                 self.token = data['token']
