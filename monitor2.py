@@ -250,7 +250,7 @@ class Monitor(Daemon):
         return pickled
 
     def save_sensor(self):
-        data = {"device_id": self.device_id, "sensors": self.save_particles()}
+        data = {"device_id": self.device_id, "sensors": self.save_particles(), "token": self.token}
         with open("sensor.dat", 'wb') as outfile:
             pickle.dump(data, outfile)
 
@@ -267,6 +267,7 @@ class Monitor(Daemon):
                 with open('sensor.dat', 'r') as infile:
                     data = pickle.load(infile)
                 self.device_id = data['device_id']
+                self.token = data['token']
                 for each in data['sensors']:
                     self.particles.append(pickle.loads(each))
                 logger.debug("Loaded sensor data. Device ID: %s" % self.device_id)
@@ -324,7 +325,7 @@ class Monitor(Daemon):
         while True:
             for particle in self.particles:
                 print(particle.id, particle.name, particle.get_data())
-                data = {"particle_id": particle.id, "device_id": self.device_id, "sensor_data": particle.get_data(), "token": self.token}
+                data = {"particle_id": particle.id, "device_id": self.device_id, "particle_data": particle.get_data(), "token": self.token}
                 self.upload_homesense_data(data)
             time.sleep(5)
 
