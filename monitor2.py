@@ -191,15 +191,9 @@ class Monitor(Daemon):
 
                     r = requests.post(self.api_server + "/api/sensors/add_particle/", data=data)
 
-                    print(r.status_code)
-                    print(r.text)
-
                     if r.status_code == 201:
-                        print("OK")
                         logger.info("Successfully Registered Particle %s" % data['particle_name'])
                     else:
-                        print("WTF")
-                        #print(r.status_code, r.text)
                         logger.error("Unable to register particle with server: %s %s" % (r.status_code, r.text))
                         exit()
             except Exception as err:
