@@ -8,6 +8,10 @@ from threading import Thread
 import busio
 import adafruit_sgp30
 import board
+import time
+import board
+import busio
+import adafruit_sgp30
 
 addr = 0x58
 
@@ -16,13 +20,15 @@ class SGP30():
         global addr
         self.addr = addr
         self.sensor_running = False
-        i2c_bus = busio.I2C(board.SCL, board.SDA, frequency = 100000)
-        self.sgp30 = adafruit_sgp30.Adafruit_SGP30(i2c_bus)
+        i2c = busio.I2C(board.SCL, board.SDA, frequency=100000)
+        self.sgp30 = adafruit_sgp30.Adafruit_SGP30(i2c)
+        self.sgp30.iaq_init()
+        #self.sgp30.set_iaq_baseline(0x8973, 0x8aae)
         #super(Sensor).__init__()
         #self.setup()
 
     def get_data(self):
-        return(self.sgp30.iaq_measure())
+        return(self.sgp30.eCO2, self.sgp30.TVOC)
 
     def run_sensor(self):
         pass
