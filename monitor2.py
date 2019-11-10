@@ -203,7 +203,7 @@ class Monitor(Daemon):
                         logger.error("Unable to register particle with server: %s %s" % (r.status_code, r.text))
                         exit()
             except Exception as err:
-                logger.error("Unable to register particle with server: %s" % (err))
+                logger.error("Except caught?: %s" % (err))
                 exit()
 
     def get_sensors(self):
