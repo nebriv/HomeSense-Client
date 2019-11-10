@@ -391,7 +391,8 @@ class Monitor(Daemon):
 
         self.add_scheduled_task(self.check_for_updates, 10)
         self.add_scheduled_task(self.display.dim, 30)
-        self.scheduler.run(blocking=False)
+        t = Thread(target=self.scheduler.run)
+        t.start()
         self.initialize_sensors()
         self.get_data()
 

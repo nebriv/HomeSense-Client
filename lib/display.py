@@ -8,14 +8,12 @@ try:
     from luma.oled.device import ssd1306, ssd1309, ssd1325, ssd1331, sh1106
     import_success = True
 
-
 except ImportError:
     import_success = False
 from textwrap import wrap
 import logging
 import board
 import busio
-
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
