@@ -325,7 +325,7 @@ class Monitor(Daemon):
         while sleeptime > 0:
             logger.debug("Sleeping for %s seconds..." % sleeptime)
             self.display.update_screen(["Sleeping for %s seconds..." % sleeptime])
-            time.sleep(sleeptime)
+            time.sleep(1)
             sleeptime -= 1
 
 
