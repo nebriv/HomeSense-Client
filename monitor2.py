@@ -320,15 +320,24 @@ class Monitor(Daemon):
         r = requests.post(self.api_server + "/api/data/add/", data=data)
         #print(r.text)
 
+    def wait(self, sleeptime=120):
+        while sleeptime > 0:
+            logger.debug("Sleeping for %s seconds..." % time)
+            time.sleep(sleeptime)
+            sleeptime -= 1
+
+
     def get_data(self):
         while True:
             self.display.update_screen(["Collecting Data..."])
             for particle in self.particles:
                 #print(particle.id, particle.name, particle.get_data())
+                logger.info("Getting data...")
                 data = {"particle_id": particle.id, "device_id": self.device_id, "particle_data": particle.get_data(), "token": self.token}
                 self.upload_homesense_data(data)
             self.display.update_screen(["Sleeping..."])
-            time.sleep(120)
+            self.wait()
+
 
     def run(self):
         logger.debug("Starting Run Statement")
