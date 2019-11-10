@@ -325,7 +325,7 @@ class Monitor(Daemon):
         while True:
             for particle in self.particles:
                 print(particle.id, particle.name, particle.get_data())
-                data = {"particle_id": particle.id, "device_id": self.device_id, "sensor_data": particle.get_data()}
+                data = {"particle_id": particle.id, "device_id": self.device_id, "sensor_data": particle.get_data(), "token": self.token}
                 self.upload_homesense_data(data)
             time.sleep(5)
 
