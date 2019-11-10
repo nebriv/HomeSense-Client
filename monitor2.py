@@ -15,8 +15,7 @@ import signal
 import pkgutil
 import sys
 import pickle
-
-
+import sched
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
@@ -121,6 +120,7 @@ class Monitor(Daemon):
     start_time = None
     threads = []
     thread_halt = False
+    scheduler = sched.scheduler(time.time, time.sleep)
 
     def device_clock(self):
         while True:
@@ -133,30 +133,16 @@ class Monitor(Daemon):
                 self.run_time = (now - self.start_time).total_seconds()
             time.sleep(1)
 
-    def time_based_events(self):
-        while True:
-            if self.thread_halt == True:
-                break
-            if self.run_time > 30 and self.run_time < 31:
-                logger.debug("Dimming display.")
-                self.display.dim()
-
-            if self.run_time % 10:
-                self.check_for_updates()
-
-            time.sleep(1)
-
     def start_device_clock(self):
         thread1 = Thread(target=self.device_clock)
         thread1.daemon = True
         thread1.start()
         self.threads.append(thread1)
-        thread2 = Thread(target=self.time_based_events)
-        thread2.daemon = True
-        thread2.start()
-        self.threads.append(thread2)
 
         return True
+
+    def add_scheduled_task(self, function, time):
+        self.scheduler.enter(time, 2, function)
 
     def check_for_updates(self):
         try:
@@ -381,6 +367,9 @@ class Monitor(Daemon):
 
     def run(self):
         self.start_device_clock()
+        self.add_scheduled_task(self.check_for_updates, 60)
+        self.add_scheduled_task(self.display.dim, 30)
+        self.scheduler.run(False)
         logger.debug("Starting Run Statement")
         signal.signal(signal.SIGINT, self.keyboard_interrupt)
         self.display = Display()
