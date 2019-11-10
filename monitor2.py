@@ -196,14 +196,14 @@ class Monitor(Daemon):
 
                     if r.status_code == 201:
                         print("OK")
-                        logger.info("Successfully Registered Particle %s" % each['name'])
+                        logger.info("Successfully Registered Particle %s" % data['particle_name'])
                     else:
                         print("WTF")
                         #print(r.status_code, r.text)
                         logger.error("Unable to register particle with server: %s %s" % (r.status_code, r.text))
                         exit()
             except Exception as err:
-                logger.error("Except caught?: %s" % (err))
+                logger.error("An error occured when registering a particle: %s" % (err))
                 exit()
 
     def get_sensors(self):
