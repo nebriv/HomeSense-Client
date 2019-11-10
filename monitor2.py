@@ -187,14 +187,18 @@ class Monitor(Daemon):
                             "particle_name": each.name,
                             "particle_id": each.id,
                             "particle_unit": each.unit}
-                    logger.debug("Uploading registering particle: %s" % data)
-                    print(data)
+                    logger.debug("Uploading particle: %s" % data)
+
                     r = requests.post(self.api_server + "/api/sensors/add_particle/", data=data)
+
                     print(r.status_code)
+                    print(r.text)
 
                     if r.status_code == 201:
+                        print("OK")
                         logger.info("Successfully Registered Particle %s" % each['name'])
                     else:
+                        print("WTF")
                         #print(r.status_code, r.text)
                         logger.error("Unable to register particle with server: %s %s" % (r.status_code, r.text))
                         exit()
