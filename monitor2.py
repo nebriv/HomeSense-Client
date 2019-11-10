@@ -370,7 +370,7 @@ class Monitor(Daemon):
 
     def run(self):
         self.start_device_clock()
-        self.scheduler.run()
+
         logger.debug("Starting Run Statement")
         signal.signal(signal.SIGINT, self.keyboard_interrupt)
         self.display = Display()
@@ -391,7 +391,7 @@ class Monitor(Daemon):
 
         self.add_scheduled_task(self.check_for_updates, 10)
         self.add_scheduled_task(self.display.dim, 30)
-
+        self.scheduler.run()
         self.initialize_sensors()
         self.get_data()
 
