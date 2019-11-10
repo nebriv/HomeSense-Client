@@ -137,7 +137,7 @@ class Monitor(Daemon):
         while True:
             if self.thread_halt == True:
                 break
-            if self.run_time > 30:
+            if self.run_time > 30 and not self.run_time < 31:
                 logger.debug("Dimming display.")
                 self.display.dim()
             time.sleep(1)
