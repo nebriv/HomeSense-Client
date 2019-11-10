@@ -119,6 +119,7 @@ class Monitor(Daemon):
     sensor_addresses = []
     run_time = 0
     start_time = None
+    threads = []
 
     def device_clock(self):
         while True:
@@ -140,9 +141,13 @@ class Monitor(Daemon):
         thread1 = Thread(target=self.device_clock)
         thread1.daemon = True
         thread1.start()
+        self.threads.append(thread1)
         thread2 = Thread(target=self.time_based_events)
         thread2.daemon = True
         thread2.start()
+        self.threads.append(thread2)
+
+
         return True
 
     def check_for_updates(self):
@@ -162,7 +167,10 @@ class Monitor(Daemon):
     def keyboard_interrupt(self, signal, frame):
         logger.info("Keyboard Interrupt - Shutting Down")
         self.display.update_screen(["Shutting Down!"])
-        time.sleep(5)
+        for thread in self.threads:
+            thread.stop()
+
+        time.sleep(1)
         self.display.clear()
         sys.exit(0)
 
