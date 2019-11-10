@@ -142,7 +142,8 @@ class Monitor(Daemon):
         return True
 
     def add_scheduled_task(self, function, time, **args):
-        self.scheduler.enter(time, 2, function, (args))
+        logger.debug("Adding task: %s" % str(function.__name__))
+        self.scheduler.enter(time, 1, function, (args))
 
     def check_for_updates(self):
         try:
