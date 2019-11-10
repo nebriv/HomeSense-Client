@@ -28,4 +28,4 @@ class Particle(Sensor):
         return self.name
 
     def get_data(self):
-        return self.sgpObject.voc
+        return sgp30.SGPsensor.sgp30.TVOC
