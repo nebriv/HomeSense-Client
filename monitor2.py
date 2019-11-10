@@ -120,9 +120,12 @@ class Monitor(Daemon):
     run_time = 0
     start_time = None
     threads = []
+    thread_halt = False
 
     def device_clock(self):
         while True:
+            if self.thread_halt == True:
+                break
             if self.start_time == None:
                 self.start_time = datetime.datetime.now()
             else:
@@ -132,6 +135,8 @@ class Monitor(Daemon):
 
     def time_based_events(self):
         while True:
+            if self.thread_halt == True:
+                break
             if self.run_time > 30:
                 logger.debug("Dimming display.")
                 self.display.dim()
@@ -146,7 +151,6 @@ class Monitor(Daemon):
         thread2.daemon = True
         thread2.start()
         self.threads.append(thread2)
-
 
         return True
 
@@ -167,10 +171,9 @@ class Monitor(Daemon):
     def keyboard_interrupt(self, signal, frame):
         logger.info("Keyboard Interrupt - Shutting Down")
         self.display.update_screen(["Shutting Down!"])
-        for thread in self.threads:
-            thread.stop()
+        self.thread_halt = True
 
-        time.sleep(1)
+        time.sleep(2)
         self.display.clear()
         sys.exit(0)
 
