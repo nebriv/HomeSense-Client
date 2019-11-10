@@ -44,8 +44,7 @@ class Display:
 
     def clear(self):
         if import_success:
-            self.disp.fill(0)
-            self.disp.show()
+            self.disp.clear()
         else:
             pass
 
