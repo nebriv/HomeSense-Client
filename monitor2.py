@@ -127,17 +127,27 @@ class Monitor(Daemon):
             else:
                 now = datetime.datetime.now()
                 self.run_time = (now - self.start_time).total_seconds()
+            time.sleep(1)
 
+    def time_based_events(self):
+        while True:
             if self.run_time > 30:
                 self.display.dim()
-
-            time.sleep(5)
+            time.sleep(1)
 
     def start_device_clock(self):
-        thread1 = Thread(target=self.device_clock())
+        thread1 = Thread(target=self.device_clock)
         thread1.daemon = True
         thread1.start()
+
+        thread1 = Thread(target=self.time_based_events)
+        thread1.daemon = True
+        thread1.start()
+
+
         return True
+
+
 
     def check_for_updates(self):
         try:
