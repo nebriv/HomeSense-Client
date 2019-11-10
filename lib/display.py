@@ -36,6 +36,7 @@ class Display:
         if import_success:
             self.disp.clear()
             self.disp.reset()
+            self.disp.display()
         else:
             pass
 
