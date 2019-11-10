@@ -21,5 +21,4 @@ urllib3==1.22
 Werkzeug==0.14.1
 smbus
 pillow
-RPI.GPIO
-adafruit-blinka
+luma.oled

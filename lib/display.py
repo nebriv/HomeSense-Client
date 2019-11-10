@@ -3,7 +3,12 @@ try:
     from PIL import ImageDraw
     from PIL import ImageFont
     import adafruit_ssd1306
+    from luma.core.interface.serial import i2c, spi
+    from luma.core.render import canvas
+    from luma.oled.device import ssd1306, ssd1309, ssd1325, ssd1331, sh1106
     import_success = True
+
+
 except ImportError:
     import_success = False
 from textwrap import wrap
@@ -28,10 +33,9 @@ class Display:
     RST = 24
     def __init__(self):
         if import_success:
-            i2c = busio.I2C(board.SCL, board.SDA)
-            self.disp = adafruit_ssd1306.SSD1306_I2C(128, 32, i2c)
-            self.disp.fill(0)
-            self.disp.show()
+            serial = i2c(port=1, address=0x3C)
+            self.disp = ssd1306(serial, rotate=1)
+            self.disp.clear()
             # self.disp.begin()
             # self.disp.clear()
             # self.disp.display()
@@ -94,8 +98,8 @@ class Display:
                 draw.text((x, top + line_break),    line,  font=font, fill=200)
                 line_break = 10
             # Display image.
-            self.disp.image(image)
-            self.disp.show()
+            #self.disp.image(image)
+            self.disp.display(image)
         else:
             logger.error("Import failed. Missing modules.")
             pass
