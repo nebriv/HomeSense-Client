@@ -41,7 +41,9 @@ class Display:
             pass
 
     def dim(self):
-        self.disp.dim(True)
+        #self.disp.dim(True)
+        self.disp.set_contrast(1)
+
 
     def update_screen(self, message=[]):
         if import_success:

@@ -123,7 +123,6 @@ class Monitor(Daemon):
 
     def device_clock(self):
         while True:
-            print(self.run_time)
             if self.start_time == None:
                 self.start_time = datetime.datetime.now()
             else:
@@ -134,6 +133,7 @@ class Monitor(Daemon):
     def time_based_events(self):
         while True:
             if self.run_time > 30:
+                logger.debug("Dimming display.")
                 self.display.dim()
             time.sleep(1)
 
