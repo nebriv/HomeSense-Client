@@ -129,6 +129,7 @@ class Monitor(Daemon):
             g = git.cmd.Git(os.getcwd())
             update_results = g.pull()
             if "Updating " in update_results:
+                self.display.update_screen(["Update found, restarting..."])
                 restart_program()
         except Exception as err:
             logger.error(err)
@@ -167,14 +168,12 @@ class Monitor(Daemon):
                 logger.error("Unable to get token from server: %s %s" % (r.status_code, r.text))
                 exit()
             try:
-
                 data['token'] = self.token
 
                 r = requests.post(self.api_server + "/api/sensors/register/", data=data)
                 if r.status_code == 201:
                     logger.info("Successfully Registered Sensor")
                 else:
-                    #print(r.status_code, r.text)
                     logger.error("Unable to register with server: %s %s" % (r.status_code, r.text))
                     exit()
             except Exception as err:
@@ -319,15 +318,17 @@ class Monitor(Daemon):
     def upload_homesense_data(self, data):
         logger.info("Uploading data...")
         r = requests.post(self.api_server + "/api/data/add/", data=data)
-        print(r.text)
+        #print(r.text)
 
     def get_data(self):
         while True:
+            self.display.update_screen(["Collecting Data..."])
             for particle in self.particles:
-                print(particle.id, particle.name, particle.get_data())
+                #print(particle.id, particle.name, particle.get_data())
                 data = {"particle_id": particle.id, "device_id": self.device_id, "particle_data": particle.get_data(), "token": self.token}
                 self.upload_homesense_data(data)
-            time.sleep(5)
+            self.display.update_screen(["Sleeping..."])
+            time.sleep(120)
 
     def run(self):
         logger.debug("Starting Run Statement")
