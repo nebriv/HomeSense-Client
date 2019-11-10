@@ -122,6 +122,7 @@ class Monitor(Daemon):
 
     def device_clock(self):
         while True:
+            print(self.run_time)
             if self.start_time == None:
                 self.start_time = datetime.datetime.now()
             else:
@@ -139,15 +140,10 @@ class Monitor(Daemon):
         thread1 = Thread(target=self.device_clock)
         thread1.daemon = True
         thread1.start()
-
-        thread1 = Thread(target=self.time_based_events)
-        thread1.daemon = True
-        thread1.start()
-
-
+        thread2 = Thread(target=self.time_based_events)
+        thread2.daemon = True
+        thread2.start()
         return True
-
-
 
     def check_for_updates(self):
         try:
