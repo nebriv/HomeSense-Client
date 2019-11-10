@@ -162,25 +162,9 @@ class Monitor(Daemon):
             if r.status_code == 200:
                 logger.info("Received sensor token from server")
                 self.token = r.json()['token']
-                self.config.set("Server", "token", self.token)
             else:
                 #print(r.status_code, r.text)
                 logger.error("Unable to get token from server: %s %s" % (r.status_code, r.text))
-                exit()
-            try:
-                for each in self.particles:
-                    data[each['sensor_name'] + "_name"] = each.name
-                    data[each['sensor_data_unit_name']] = each.unit
-                    data['token'] = self.token
-                r = requests.post(self.api_server + "/api/sensors/register/", data=data)
-                if r.status_code == 201:
-                    logger.info("Successfully Registered Sensor")
-                else:
-                    #print(r.status_code, r.text)
-                    logger.error("Unable to register with server: %s %s" % (r.status_code, r.text))
-                    exit()
-            except Exception as err:
-                logger.error("Unable to register with server: %s" % (err))
                 exit()
 
             try:
