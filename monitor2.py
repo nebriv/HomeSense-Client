@@ -279,6 +279,7 @@ class Monitor(Daemon):
 
     def initialize_sensors(self):
         logger.info("Initializing Sensors...")
+        self.display.update_screen(["Initializing Sensors..."])
         for particle in self.particles:
             logger.info("Starting %s" % particle.name)
             particle.setup()
@@ -322,8 +323,8 @@ class Monitor(Daemon):
 
     def wait(self, sleeptime=120):
         while sleeptime > 0:
-            logger.debug("Sleeping for %s seconds..." % time)
-            self.display.update_screen(["Sleeping for %s seconds..." % time])
+            logger.debug("Sleeping for %s seconds..." % sleeptime)
+            self.display.update_screen(["Sleeping for %s seconds..." % sleeptime])
             time.sleep(sleeptime)
             sleeptime -= 1
 
