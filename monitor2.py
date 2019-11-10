@@ -149,7 +149,7 @@ class Monitor(Daemon):
         try:
             self.display.update_screen(["Checking for updates"])
             logger.info("Checking for sensor updates")
-            #print("Checking for sensor_updates")
+
             g = git.cmd.Git(os.getcwd())
             update_results = g.pull()
             if "Updating " in update_results:
@@ -159,7 +159,7 @@ class Monitor(Daemon):
             logger.error(err)
             #print("CAUGHT EXCEPTION DURING UPDATES: %s" % err)
 
-        self.add_scheduled_task(self.check_for_updates, 10)
+        self.add_scheduled_task(self.check_for_updates, 30)
 
     def keyboard_interrupt(self, signal, frame):
         logger.info("Keyboard Interrupt - Shutting Down")

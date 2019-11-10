@@ -48,7 +48,7 @@ class Display:
 
     def dim(self):
         #self.disp.dim(True)
-        self.disp.set_contrast(0)
+        self.disp.contrast(0)
 
 
     def update_screen(self, message=[]):
