@@ -133,19 +133,11 @@ class Monitor(Daemon):
                 self.run_time = (now - self.start_time).total_seconds()
             time.sleep(1)
 
-    def start_scheduler(self):
-        self.scheduler.run()
-
     def start_device_clock(self):
         thread1 = Thread(target=self.device_clock)
         thread1.daemon = True
         thread1.start()
         self.threads.append(thread1)
-
-        thread2 = Thread(target=self.start_scheduler)
-        thread2.daemon = True
-        thread2.start()
-        self.threads.append(thread2)
 
         return True
 
@@ -399,7 +391,7 @@ class Monitor(Daemon):
 
         self.add_scheduled_task(self.check_for_updates, 10)
         self.add_scheduled_task(self.display.dim, 30)
-
+        self.scheduler.run(blocking=False)
         self.initialize_sensors()
         self.get_data()
 
