@@ -154,7 +154,7 @@ class Monitor(Daemon):
         if self.homesense_enabled:
             logger.info("Registering with HomeSense server: %s" % self.api_server)
             self.display.update_screen(["Registering with server:", self.api_server])
-            return True
+
             data = {'device_id': self.device_id}
             i = 1
             r = requests.get(self.api_server + "/api/sensors/get_token/")
