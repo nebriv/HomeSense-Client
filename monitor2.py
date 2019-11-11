@@ -120,7 +120,7 @@ class Monitor(Daemon):
     start_time = None
     threads = []
     thread_halt = False
-
+    reg_code = None
 
     def sched_sleeper(self,time_sleep):
         if self.thread_halt == True:
@@ -187,13 +187,15 @@ class Monitor(Daemon):
         self.device_id = str(uuid.uuid4())
 
     def wait_for_registration(self):
-        data = {'device_id': self.device_id, 'token': self.token}
-        r = requests.get(self.api_server + "/api/sensors/check_registration", data=data)
-        if r.status_code < 400:
-            return True
-        else:
-            time.sleep(5)
-            self.check_registration()
+        if self.reg_code:
+            self.display.update_screen(["Registration Code:", self.reg_code])
+            data = {'device_id': self.device_id, 'token': self.token}
+            r = requests.get(self.api_server + "/api/sensors/check_registration", data=data)
+            if r.status_code < 400:
+                return True
+            else:
+                time.sleep(5)
+                self.check_registration()
 
     def register(self):
         if self.homesense_enabled:
@@ -217,9 +219,11 @@ class Monitor(Daemon):
                 r = requests.post(self.api_server + "/api/sensors/register/", data=data)
                 if r.status_code == 201:
                     logger.info("Successfully Registered Sensor")
-                    print(r.json())
-                    print(r.json()['registration_code'])
-                    exit()
+                    if "registration_code" in r.json():
+                        self.reg_code = r.json()['registration_code']
+                    else:
+                        logger.error("No registration code received by server: %s %s" % (r.status_code, r.text))
+                        exit()
                 else:
                     logger.error("Unable to register with server: %s %s" % (r.status_code, r.text))
                     exit()
