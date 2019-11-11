@@ -13,12 +13,12 @@ Jinja2==2.10
 MarkupSafe==1.0
 pigpio==1.38
 psutil==5.4.3
-requests==2.18.4
+requests==2.20.0
 smbus2==0.2.0
 smmap2==2.0.3
 tsl2561==3.3
-urllib3==1.22
-Werkzeug==0.14.1
+urllib3==1.24.2
+Werkzeug==0.15.3
 smbus
 pillow
 luma.oled
