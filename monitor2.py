@@ -191,7 +191,7 @@ class Monitor(Daemon):
             logger.info("Waiting for registration")
             self.display.update_screen(["Registration Code:", self.reg_code])
             data = {'device_id': self.device_id, 'token': self.token}
-            r = requests.post(self.api_server + "/api/sensors/check_registration", data=data)
+            r = requests.post(self.api_server + "/api/sensors/check_registration/", data=data)
             if r.status_code < 400:
                 return True
             else:
