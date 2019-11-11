@@ -38,3 +38,7 @@ class SGP30():
 
 SGPsensor = SGP30()
 
+if __name__ == "__main__":
+    while True:
+        print(SGPsensor.get_data())
+        time.sleep(1)
