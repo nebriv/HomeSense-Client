@@ -152,6 +152,8 @@ class Monitor(Daemon):
         self.scheduler.enter(time, 1, function, (args))
 
     def check_for_updates(self):
+        # TODO: Need to install requirements
+
         try:
             self.display.update_screen(["Checking for updates"])
             logger.info("Checking for sensor updates")
@@ -184,6 +186,15 @@ class Monitor(Daemon):
     def generate_device_id(self):
         self.device_id = str(uuid.uuid4())
 
+    def wait_for_registration(self):
+        data = {'device_id': self.device_id, 'token': self.token}
+        r = requests.get(self.api_server + "/api/sensors/check_registration", data=data)
+        if r.status_code < 400:
+            return True
+        else:
+            time.sleep(5)
+            self.check_registration()
+
     def register(self):
         if self.homesense_enabled:
             logger.info("Registering with HomeSense server: %s" % self.api_server)
@@ -206,6 +217,9 @@ class Monitor(Daemon):
                 r = requests.post(self.api_server + "/api/sensors/register/", data=data)
                 if r.status_code == 201:
                     logger.info("Successfully Registered Sensor")
+                    print(r.json())
+                    print(r.json()['registration_code'])
+                    exit()
                 else:
                     logger.error("Unable to register with server: %s %s" % (r.status_code, r.text))
                     exit()
@@ -231,6 +245,8 @@ class Monitor(Daemon):
             except Exception as err:
                 logger.error("An error occured when registering a particle: %s" % (err))
                 exit()
+            self.wait_for_registration()
+
 
     def get_sensors(self):
         logger.info("Loading available particles...")
