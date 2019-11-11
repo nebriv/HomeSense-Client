@@ -1,16 +1,25 @@
-import sched
 import time
-import threading
+import board
+import busio
+import adafruit_sgp30
 
-def hi():
-    print("hi")
+i2c = busio.I2C(board.SCL, board.SDA, frequency=100000)
 
-scheduler = sched.scheduler(time.time, time.sleep)
-scheduler.enter(10, 1, hi, ())
+# Create library object on our I2C port
+sgp30 = adafruit_sgp30.Adafruit_SGP30(i2c)
 
-print("Starting...")
+print("SGP30 serial #", [hex(i) for i in sgp30.serial])
 
+sgp30.iaq_init()
+sgp30.set_iaq_baseline(0x8973, 0x8aae)
 
+elapsed_sec = 0
 
-time.sleep(30)
-print("Done")
+while True:
+    print("eCO2 = %d ppm \t TVOC = %d ppb" % (sgp30.eCO2, sgp30.TVOC))
+    time.sleep(1)
+    elapsed_sec += 1
+    if elapsed_sec > 10:
+        elapsed_sec = 0
+        print("**** Baseline values: eCO2 = 0x%x, TVOC = 0x%x"
+              % (sgp30.baseline_eCO2, sgp30.baseline_TVOC))
