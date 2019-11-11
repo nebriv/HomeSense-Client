@@ -195,7 +195,7 @@ class Monitor(Daemon):
                 return True
             else:
                 time.sleep(5)
-                self.check_registration()
+                self.wait_for_registration()
 
     def register(self):
         if self.homesense_enabled:
