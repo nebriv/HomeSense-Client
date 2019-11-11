@@ -349,10 +349,18 @@ class Monitor(Daemon):
         logger.info("Reseting Sensor")
         os.remove('sensor.dat')
 
-    def upload_homesense_data(self, data):
-        logger.info("Uploading data...")
-        r = requests.post(self.api_server + "/api/data/add/", data=data)
-        #print(r.text)
+    def upload_homesense_data(self, data, retry=0):
+        try:
+            logger.info("Uploading data...")
+            r = requests.post(self.api_server + "/api/data/add/", data=data)
+        except Exception as err:
+            if retry > 3:
+                return False
+            else:
+                logger.warning("Error uploading data, retrying in 5 seconds...")
+                time.sleep(5)
+                retry += 1
+                self.upload_homesense_data(data, retry)
 
     def wait(self, sleeptime=120):
         logger.info("Sleeping for %s seconds..." % sleeptime)
