@@ -12,7 +12,7 @@ class Particle(Sensor):
     def __init__(self):
         Sensor.__init__(self)
         self.name = "Humidity"
-        self.unit = "fahrenheit"
+        self.unit = "rHl"
 
     def get_name(self):
         return self.name

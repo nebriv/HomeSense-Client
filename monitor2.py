@@ -121,6 +121,7 @@ class Monitor(Daemon):
     threads = []
     thread_halt = False
     reg_code = None
+    update_time = 600
 
     def sched_sleeper(self,time_sleep):
         if self.thread_halt == True:
@@ -144,7 +145,6 @@ class Monitor(Daemon):
         thread1.daemon = True
         thread1.start()
         self.threads.append(thread1)
-
         return True
 
     def add_scheduled_task(self, function, time, **args):
@@ -185,6 +185,11 @@ class Monitor(Daemon):
 
     def generate_device_id(self):
         self.device_id = str(uuid.uuid4())
+
+    def get_settings(self):
+        data = {'device_id': self.device_id, 'token': self.token}
+        r = requests.get(self.api_server + "/api/sensors/settings/", data=data)
+        print(r.json())
 
     def wait_for_registration(self, retry=0):
         if self.reg_code:
@@ -430,6 +435,9 @@ class Monitor(Daemon):
             except ValueError:
                 self.reset_sensor()
                 self.first_time_setup()
+
+        while True:
+            self.get_settings()
 
         self.add_scheduled_task(self.display.dim, 30)
         t = Thread(target=self.scheduler.run)
