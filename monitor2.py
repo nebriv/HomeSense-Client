@@ -165,7 +165,7 @@ class Monitor(Daemon):
         logger.info("Keyboard Interrupt - Shutting Down")
         self.display.update_screen(["Shutting Down!"])
         self.thread_halt = True
-
+        del self.scheduler
         time.sleep(2)
         self.display.clear()
         sys.exit(0)
@@ -387,7 +387,6 @@ class Monitor(Daemon):
                 self.reset_sensor()
                 self.first_time_setup()
 
-        self.add_scheduled_task(self.check_for_updates, 600)
         self.add_scheduled_task(self.display.dim, 30)
         t = Thread(target=self.scheduler.run)
         t.start()
