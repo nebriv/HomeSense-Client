@@ -126,7 +126,7 @@ class Monitor(Daemon):
         if self.thread_halt == True:
             exit()
         else:
-            time.sleep()
+            time.sleep(time_sleep)
 
     def device_clock(self):
         while True:
