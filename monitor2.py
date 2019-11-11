@@ -120,7 +120,13 @@ class Monitor(Daemon):
     start_time = None
     threads = []
     thread_halt = False
-    scheduler = sched.scheduler(time.time, time.sleep)
+
+
+    def sched_sleeper(self,time_sleep):
+        if self.thread_halt == True:
+            exit()
+        else:
+            time.sleep()
 
     def device_clock(self):
         while True:
@@ -368,7 +374,7 @@ class Monitor(Daemon):
 
     def run(self):
         self.start_device_clock()
-
+        self.scheduler = sched.scheduler(time.monotonic, self.sched_sleeper)
         logger.debug("Starting Run Statement")
         signal.signal(signal.SIGINT, self.keyboard_interrupt)
         self.display = Display()
