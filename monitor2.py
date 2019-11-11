@@ -186,17 +186,26 @@ class Monitor(Daemon):
     def generate_device_id(self):
         self.device_id = str(uuid.uuid4())
 
-    def wait_for_registration(self):
+    def wait_for_registration(self, retry=0):
         if self.reg_code:
             logger.info("Waiting for registration")
             self.display.update_screen(["Registration Code:", self.reg_code])
             data = {'device_id': self.device_id, 'token': self.token}
             r = requests.post(self.api_server + "/api/sensors/check_registration/", data=data)
             if r.status_code < 400:
+                self.display.update_screen(["Welcome to HomeSense!"])
+                time.sleep(30)
                 return True
             else:
-                time.sleep(5)
-
+                if retry > 120:
+                    self.display.update_screen(["Registration Timeout...", "=( Reboot to try again"])
+                    time.sleep(120)
+                    return True
+                if retry > 60:
+                    time.sleep(15)
+                else:
+                    time.sleep(5)
+                retry += 1
                 self.wait_for_registration()
 
     def register(self):
