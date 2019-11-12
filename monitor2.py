@@ -123,6 +123,7 @@ class Monitor(Daemon):
     reg_code = None
 
     # Settings
+    update_setting_frequency = 30
     update_frequency = 600
     display_brightness = 100
     screen_on = True
@@ -199,8 +200,8 @@ class Monitor(Daemon):
     def get_settings(self):
         settings_updated = False
         try:
-            logger.info("Getting sensor settings from cloud")
-            self.display.update_screen(["Getting Sensor Settings"])
+            logger.debug("Getting sensor settings from cloud")
+            #self.display.update_screen(["Getting Sensor Settings"])
             data = {'device_id': self.device_id, 'token': self.token}
             r = requests.get(self.api_server + "/api/sensors/sensor_settings/", data=data)
             print(r.json())
@@ -220,10 +221,15 @@ class Monitor(Daemon):
                     self.screen_on = new_settings['screen_on']
                     settings_updated = True
 
+            if "update_setting_frequency" in new_settings:
+                if new_settings['update_setting_frequency'] != self.update_setting_frequency:
+                    self.update_setting_frequency = new_settings['update_setting_frequency']
+                    settings_updated = True
+
             if settings_updated:
                 self.reload_settings()
 
-            self.add_scheduled_task(self.get_settings, 5)
+            self.add_scheduled_task(self.get_settings, self.update_setting_frequency)
 
         except Exception as err:
             logger.error("Error getting sensor settings from cloud: %s" % err)
