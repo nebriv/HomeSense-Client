@@ -47,11 +47,11 @@ class Display:
 
     def screen_onoff(self, onoff):
         if onoff:
-            self.update_screen("")
+            #self.update_screen("")
             #self.disp.show()
             self.on = True
         else:
-            self.disp.cleanup()
+            self.disp.clear()
             self.on = False
 
     def set_brightness(self, brightness):
