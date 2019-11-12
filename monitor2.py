@@ -220,6 +220,11 @@ class Monitor(Daemon):
                     self.screen_on = new_settings['screen_on']
                     settings_updated = True
 
+            if settings_updated:
+                self.reload_settings()
+
+            self.add_scheduled_task(self.get_settings, 5)
+
         except Exception as err:
             logger.error("Error getting sensor settings from cloud: %s" % err)
 
@@ -470,7 +475,6 @@ class Monitor(Daemon):
 
         while True:
             self.get_settings()
-            time.sleep(10)
 
         self.add_scheduled_task(self.display.dim, 30)
         t = Thread(target=self.scheduler.run)
