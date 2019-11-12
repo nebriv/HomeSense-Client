@@ -445,7 +445,7 @@ class Monitor(Daemon):
         logger.info("Sleeping for %s seconds..." % sleeptime)
         while sleeptime > 0:
             self.display.update_screen(["Sleeping for %s seconds..." % sleeptime])
-            time.sleep(sleeptime)
+            time.sleep(1)
             sleeptime -= 1
 
     def get_data(self):
@@ -464,6 +464,15 @@ class Monitor(Daemon):
         logger.debug("Starting Run Statement")
         signal.signal(signal.SIGINT, self.keyboard_interrupt)
         self.display = Display()
+
+        while True:
+            self.display.update_screen(["on"])
+            time.sleep(2)
+            self.display.update_screen(["off"])
+            self.display.screen_onoff(False)
+            time.sleep(5)
+            self.display.screen_onoff(True)
+
         #self.display.dim()
         self.display.update_screen(["Booting..."])
         time.sleep(1)

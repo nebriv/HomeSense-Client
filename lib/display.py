@@ -50,7 +50,7 @@ class Display:
             self.disp.show()
             self.on = True
         else:
-            self.disp.hide()
+            self.disp.cleanup()
             self.on = False
 
     def set_brightness(self, brightness):
