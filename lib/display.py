@@ -57,7 +57,6 @@ class Display:
             self.disp.contrast(brightness)
 
     def update_screen(self, message=[]):
-        print("Display is: %s" % self.on)
         if import_success:
             width = self.disp.width
             height = self.disp.height
