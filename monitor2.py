@@ -187,8 +187,10 @@ class Monitor(Daemon):
         self.device_id = str(uuid.uuid4())
 
     def get_settings(self):
+        logger.info("Getting sensor settings from cloud")
+        self.display.update_screen(["Getting Sensor Settings"])
         data = {'device_id': self.device_id, 'token': self.token}
-        r = requests.get(self.api_server + "/api/sensors/settings/", data=data)
+        r = requests.get(self.api_server + "/api/sensors/sensor_settings/", data=data)
         print(r.json())
 
     def wait_for_registration(self, retry=0):
