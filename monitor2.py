@@ -193,8 +193,9 @@ class Monitor(Daemon):
 
     def reload_settings(self):
         self.display.set_brightness(self.display_brightness)
-        if self.screen_on:
-            self.display.screen_onoff(self.screen_on)
+
+        self.display.screen_onoff(self.screen_on)
+
 
 
     def get_settings(self):
