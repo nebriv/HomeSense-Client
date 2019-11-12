@@ -121,7 +121,11 @@ class Monitor(Daemon):
     threads = []
     thread_halt = False
     reg_code = None
-    update_time = 600
+
+    # Settings
+    update_frequency = 600
+    display_brightness = 100
+    screen_on = True
 
     def sched_sleeper(self,time_sleep):
         if self.thread_halt == True:
@@ -186,13 +190,36 @@ class Monitor(Daemon):
     def generate_device_id(self):
         self.device_id = str(uuid.uuid4())
 
+    def reload_settings(self):
+        self.display.set_brightness(self.display_brightness)
+        if self.screen_on:
+            self.display.screen_onoff(self.screen_on)
+
+
     def get_settings(self):
+        settings_updated = False
         try:
             logger.info("Getting sensor settings from cloud")
             self.display.update_screen(["Getting Sensor Settings"])
             data = {'device_id': self.device_id, 'token': self.token}
             r = requests.get(self.api_server + "/api/sensors/sensor_settings/", data=data)
             print(r.json())
+            new_settings = r.json()
+            if "update_frequency" in new_settings:
+                if new_settings['update_frequency'] != self.update_frequency:
+                    self.update_frequency = new_settings['update_frequency']
+                    settings_updated = True
+
+            if "display_brightness" in new_settings:
+                if new_settings['display_brightness'] != self.display_brightness:
+                    self.display_brightness = new_settings['display_brightness']
+                    settings_updated = True
+
+            if "screen_on" in new_settings:
+                if new_settings['screen_on'] != self.screen_on:
+                    self.screen_on = new_settings['screen_on']
+                    settings_updated = True
+
         except Exception as err:
             logger.error("Error getting sensor settings from cloud: %s" % err)
 
@@ -407,7 +434,7 @@ class Monitor(Daemon):
         logger.info("Sleeping for %s seconds..." % sleeptime)
         while sleeptime > 0:
             self.display.update_screen(["Sleeping for %s seconds..." % sleeptime])
-            time.sleep(1)
+            time.sleep(sleeptime)
             sleeptime -= 1
 
     def get_data(self):
@@ -418,7 +445,7 @@ class Monitor(Daemon):
                 logger.info("Getting data...")
                 data = {"particle_id": particle.id, "device_id": self.device_id, "particle_data": particle.get_data(), "token": self.token}
                 self.upload_homesense_data(data)
-            self.wait()
+            self.wait(self.update_frequency)
 
     def run(self):
         self.start_device_clock()
@@ -449,7 +476,7 @@ class Monitor(Daemon):
         t = Thread(target=self.scheduler.run)
         t.start()
         self.initialize_sensors()
-        self.get_data()
+        self.get_data(self.update_frequency)
 
 
 if __name__ == "__main__":

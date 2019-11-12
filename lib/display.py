@@ -47,6 +47,15 @@ class Display:
         #self.disp.dim(True)
         self.disp.contrast(0)
 
+    def screen_onoff(self, onoff):
+        if onoff:
+            self.disp.show()
+        else:
+            self.disp.hide()
+
+    def set_brightness(self, brightness):
+        if brightness >= 0 and brightness <= 100:
+            self.disp.contrast(brightness)
 
     def update_screen(self, message=[]):
         if import_success:
