@@ -443,6 +443,7 @@ class Monitor(Daemon):
 
         while True:
             self.get_settings()
+            time.sleep(10)
 
         self.add_scheduled_task(self.display.dim, 30)
         t = Thread(target=self.scheduler.run)
