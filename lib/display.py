@@ -47,8 +47,6 @@ class Display:
 
     def screen_onoff(self, onoff):
         if onoff:
-            #self.update_screen("")
-            #self.disp.show()
             self.on = True
         else:
             self.disp.clear()
@@ -59,6 +57,7 @@ class Display:
             self.disp.contrast(brightness)
 
     def update_screen(self, message=[]):
+        print("Display is: %s" % self.on)
         if import_success:
             width = self.disp.width
             height = self.disp.height
