@@ -464,16 +464,6 @@ class Monitor(Daemon):
         logger.debug("Starting Run Statement")
         signal.signal(signal.SIGINT, self.keyboard_interrupt)
         self.display = Display()
-
-        while True:
-            self.display.update_screen(["on"])
-            time.sleep(2)
-            self.display.update_screen(["off"])
-            self.display.screen_onoff(False)
-            time.sleep(5)
-            self.display.screen_onoff(True)
-
-        #self.display.dim()
         self.display.update_screen(["Booting..."])
         time.sleep(1)
         self.check_for_updates()
