@@ -26,14 +26,12 @@ logger.addHandler(fh)
 
 class Display:
     RST = 24
+    on = True
     def __init__(self):
         if import_success:
             serial = i2c(port=1, address=0x3C)
             self.disp = ssd1306(serial, rotate=0, height=32, width=128)
             self.disp.clear()
-            # self.disp.begin()
-            # self.disp.clear()
-            # self.disp.display()
         else:
             logger.warning("No display modules found, running in dummy mode")
 
@@ -50,8 +48,10 @@ class Display:
     def screen_onoff(self, onoff):
         if onoff:
             self.disp.show()
+            self.on = True
         else:
             self.disp.hide()
+            self.on = False
 
     def set_brightness(self, brightness):
         if brightness >= 0 and brightness <= 100:
@@ -101,7 +101,8 @@ class Display:
                 line_break = 10
             # Display image.
             #self.disp.image(image)
-            self.disp.display(image)
+            if self.on:
+                self.disp.display(image)
         else:
             logger.error("Import failed. Missing modules.")
             pass
