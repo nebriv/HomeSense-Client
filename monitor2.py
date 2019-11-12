@@ -479,14 +479,13 @@ class Monitor(Daemon):
                 self.reset_sensor()
                 self.first_time_setup()
 
-        while True:
-            self.get_settings()
+        self.get_settings()
 
         self.add_scheduled_task(self.display.dim, 30)
         t = Thread(target=self.scheduler.run)
         t.start()
         self.initialize_sensors()
-        self.get_data(self.update_frequency)
+        self.get_data()
 
 
 if __name__ == "__main__":
