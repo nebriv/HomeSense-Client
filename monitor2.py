@@ -380,7 +380,7 @@ class Monitor(Daemon):
         self.display.update_screen(["Detecting Sensors..."])
         time.sleep(1)
         self.get_i2c_addresses()
-        self.particles = []
+        
         for particle_mod in loaded_particle_modules:
             if hex(particle_mod.addr) in self.sensor_addresses:
                 particle = particle_mod.Particle()
