@@ -267,6 +267,7 @@ class Monitor(Daemon):
             data = {'device_id': self.device_id, 'token': self.token}
             r = requests.post(self.api_server + "/api/sensors/check_registration/", data=data)
             if r.status_code < 400:
+                logger.info("Registration success")
                 self.display.update_screen(["Welcome to HomeSense!"])
                 time.sleep(15)
                 return True
@@ -282,22 +283,28 @@ class Monitor(Daemon):
                 retry += 1
                 self.wait_for_registration()
 
+
     def register_particles(self):
+        data = {"device_id": self.device_id, "token": self.token}
+        r = requests.get(self.api_server + "/api/sensors/sensor_particles/", data=data)
+        registered_particles = r.json()['particle_names']
+
         try:
             for each in self.particles:
-                data = {"device_id": self.device_id,
-                        "particle_name": each.name,
-                        "particle_id": each.id,
-                        "particle_unit": each.unit}
-                logger.debug("Uploading particle: %s" % data)
+                if each.name not in registered_particles:
+                    data = {"device_id": self.device_id,
+                            "particle_name": each.name,
+                            "particle_id": each.id,
+                            "particle_unit": each.unit}
+                    logger.debug("Uploading particle: %s" % data)
 
-                r = requests.post(self.api_server + "/api/sensors/add_particle/", data=data)
+                    r = requests.post(self.api_server + "/api/sensors/add_particle/", data=data)
 
-                if r.status_code == 201:
-                    logger.info("Successfully Registered Particle %s" % data['particle_name'])
-                else:
-                    logger.error("Unable to register particle with server: %s %s" % (r.status_code, r.text))
-                    exit()
+                    if r.status_code == 201:
+                        logger.info("Successfully Registered Particle %s" % data['particle_name'])
+                    else:
+                        logger.error("Unable to register particle with server: %s %s" % (r.status_code, r.text))
+                        exit()
         except Exception as err:
             logger.error("An error occured when registering a particle: %s" % (err))
             exit()
@@ -337,15 +344,7 @@ class Monitor(Daemon):
             self.register_particles()
             self.wait_for_registration()
 
-
-    def get_sensors(self):
-        logger.info("Loading available particles...")
-        loaded_particle_modules = load_all_modules_from_dir("particles")
-
-        logger.info("Detecting sensors")
-        self.display.update_screen(["Detecting Sensors..."])
-        time.sleep(1)
-
+    def get_i2c_addresses(self):
         try:
             p = subprocess.Popen(['i2cdetect', '-y', '1'], stdout=subprocess.PIPE, )
             firstLine = True
@@ -370,14 +369,28 @@ class Monitor(Daemon):
             self.sensor_addresses = ['0x40', '0x60', '0x39']
 
         logger.debug("Found sensor addresses: %s" % " ".join(self.sensor_addresses))
+
+        return self.sensor_addresses
+
+    def get_sensors(self):
+        logger.info("Loading available particles...")
+        loaded_particle_modules = load_all_modules_from_dir("particles")
+        new_sensor = False
+        logger.info("Detecting sensors")
+        self.display.update_screen(["Detecting Sensors..."])
+        time.sleep(1)
+        self.get_i2c_addresses()
         self.particles = []
         for particle_mod in loaded_particle_modules:
             if hex(particle_mod.addr) in self.sensor_addresses:
                 particle = particle_mod.Particle()
-                logger.info("Found particle: %s" % particle.name)
-                self.particles.append(particle)
+                if particle not in self.particles:
+                    logger.info("Found new particle: %s" % particle.name)
+                    self.particles.append(particle)
+                    new_sensor = True
 
         self.save_particles()
+        return new_sensor
 
     def save_particles(self):
         pickled = []
@@ -504,6 +517,8 @@ class Monitor(Daemon):
         else:
             try:
                 self.load_sensor()
+                if self.get_sensors():
+                    self.register_particles()
             except ValueError:
                 self.reset_sensor()
                 self.first_time_setup()

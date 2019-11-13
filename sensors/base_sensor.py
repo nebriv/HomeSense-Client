@@ -22,6 +22,9 @@ class Sensor(object):
     def generate_id(self):
         self.id = str(uuid.uuid4())
 
+    def __eq(self, other):
+        return self.name == other.name
+
 def main():
     sensor = Sensor()
 
