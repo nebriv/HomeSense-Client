@@ -229,7 +229,7 @@ class Monitor(Daemon):
             #self.display.update_screen(["Getting Sensor Settings"])
             data = {'device_id': self.device_id, 'token': self.token}
 
-            r = requests.get(self.api_server + "/api/sensors/sensor_settings/", data=data)
+            r = requests.get(self.api_server + "/api/sensors/sensor_settings/", params=data)
 
             new_settings = r.json()
             if "update_frequency" in new_settings:
@@ -283,10 +283,9 @@ class Monitor(Daemon):
                 retry += 1
                 self.wait_for_registration()
 
-
     def register_particles(self):
         data = {"device_id": self.device_id, "token": self.token}
-        r = requests.get(self.api_server + "/api/sensors/sensor_particles/", data=data)
+        r = requests.get(self.api_server + "/api/sensors/sensor_particles/", params=data)
         registered_particles = r.json()['particle_names']
 
         try:
@@ -315,7 +314,6 @@ class Monitor(Daemon):
             self.display.update_screen(["Registering with server:", self.api_server])
 
             data = {'device_id': self.device_id}
-            i = 1
             r = requests.get(self.api_server + "/api/sensors/get_token/")
 
             if r.status_code == 200:
@@ -380,7 +378,7 @@ class Monitor(Daemon):
         self.display.update_screen(["Detecting Sensors..."])
         time.sleep(1)
         self.get_i2c_addresses()
-        
+
         for particle_mod in loaded_particle_modules:
             if hex(particle_mod.addr) in self.sensor_addresses:
                 particle = particle_mod.Particle()
