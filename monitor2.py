@@ -17,11 +17,15 @@ import sys
 import pickle
 import sched
 import threading
+
+from logging.handlers import RotatingFileHandler
+
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
 
 # create the logging file handler
-fh = logging.FileHandler("homesense.log")
+fh = RotatingFileHandler("monitor.log", maxBytes=200000000,
+                              backupCount=5)
 formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 fh.setFormatter(formatter)
 # add handler to logger object
@@ -128,6 +132,7 @@ class Monitor(Daemon):
     update_frequency = 600
     display_brightness = 100
     screen_on = True
+    log_level = "INFO"
 
     def sched_sleeper(self,time_sleep):
         if self.thread_halt == True:
@@ -218,9 +223,24 @@ class Monitor(Daemon):
     def generate_device_id(self):
         self.device_id = str(uuid.uuid4())
 
+    def set_logging_level(self, level):
+        levels = {'CRITICAL': logging.critical,
+                  'ERROR': logging.error,
+                  'WARNING': logging.warning,
+                  'INFO': logging.info,
+                  'DEBUG': logging.debug
+                  }
+        try:
+            logger.info("Changing log level to: %s" % level)
+            logger.setLevel(levels[level])
+        except Exception as err:
+            logger.setLevel(levels['INFO'])
+            logger.warning("Invalid logging level (%s) from server settings" % level)
+
     def reload_settings(self):
         self.display.set_brightness(self.display_brightness)
         self.display.screen_onoff(self.screen_on)
+        self.set_logging_level(self.log_level)
 
     def get_settings(self):
         settings_updated = False
@@ -234,22 +254,32 @@ class Monitor(Daemon):
             new_settings = r.json()
             if "update_frequency" in new_settings:
                 if new_settings['update_frequency'] != self.update_frequency:
+                    logger.debug("Update frequency changed to: %s" % new_settings['update_frequency'])
                     self.update_frequency = new_settings['update_frequency']
                     settings_updated = True
 
             if "display_brightness" in new_settings:
                 if new_settings['display_brightness'] != self.display_brightness:
+                    logger.debug("Display brightness changed to: %s" % new_settings['display_brightness'])
                     self.display_brightness = new_settings['display_brightness']
                     settings_updated = True
 
             if "screen_on" in new_settings:
                 if new_settings['screen_on'] != self.screen_on:
+                    logger.debug("Screen On changed to: %s" % new_settings['screen_on'])
                     self.screen_on = new_settings['screen_on']
                     settings_updated = True
 
             if "update_setting_frequency" in new_settings:
                 if new_settings['update_setting_frequency'] != self.update_setting_frequency:
+                    logger.debug("Update Setting Frequency changed to: %s" % new_settings['update_setting_frequency'])
                     self.update_setting_frequency = new_settings['update_setting_frequency']
+                    settings_updated = True
+
+            if "log_level" in new_settings:
+                if new_settings['log_level'] != self.log_level:
+                    logger.debug("Log level changed to: %s" % new_settings['log_level'])
+                    self.log_level = new_settings['log_level']
                     settings_updated = True
 
             if settings_updated:
