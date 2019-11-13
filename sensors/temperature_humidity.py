@@ -33,6 +33,8 @@ addr = 0x40
 
 class HTU21DF():
     stop = False
+    sensor_running = False
+
     def __init__(self):
         global addr
         self.addr = addr
@@ -41,6 +43,7 @@ class HTU21DF():
     def run_sensor(self):
         while True:
             if self.stop:
+                print("Stopping HTU21DF")
                 break
             handle = self.pi.i2c_open(self.bus, self.addr)  # open i2c bus
             self.pi.i2c_write_byte(handle, self.rdtemp)  # send read temp command

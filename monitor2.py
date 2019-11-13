@@ -223,8 +223,6 @@ class Monitor(Daemon):
         self.display.set_brightness(self.display_brightness)
         self.display.screen_onoff(self.screen_on)
 
-
-
     def get_settings(self):
         settings_updated = False
         try:
