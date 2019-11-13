@@ -388,7 +388,7 @@ class Monitor(Daemon):
         for particle_mod in loaded_particle_modules:
             if hex(particle_mod.addr) in self.sensor_addresses:
                 particle = particle_mod.Particle()
-                if not self.get_particle_by_name(particle.name)
+                if not self.get_particle_by_name(particle.name):
                     logger.info("Found new particle: %s" % particle.name)
                     self.particles.append(particle)
                     new_sensor = True
