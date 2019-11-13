@@ -23,4 +23,4 @@ class Particle(Sensor):
         return self.name
 
     def get_data(self):
-        return sgp.tvoc
+        return sgp.read_measurements().data[1]

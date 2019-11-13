@@ -27,4 +27,4 @@ class Particle(Sensor):
         return self.name
 
     def get_data(self):
-        return sgp.co2
+        return sgp.read_measurements().data[0]
