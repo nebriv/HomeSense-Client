@@ -378,14 +378,14 @@ class Monitor(Daemon):
 
     def get_sensors(self):
         logger.info("Loading available particles...")
-        loaded_particle_modules = load_all_modules_from_dir("particles")
+        #loaded_particle_modules = load_all_modules_from_dir("particles")
         new_sensor = False
         logger.info("Detecting sensors")
         self.display.update_screen(["Detecting Sensors..."])
         time.sleep(1)
         self.get_i2c_addresses()
 
-        for particle_mod in loaded_particle_modules:
+        for particle_mod in self.loaded_particle_modules:
             if hex(particle_mod.addr) in self.sensor_addresses:
                 particle = particle_mod.Particle()
                 if not self.get_particle_by_name(particle.name):
@@ -417,7 +417,7 @@ class Monitor(Daemon):
         for particle in self.particles:
             names.append(particle.name)
         names = ", ".join(names)
-        logger.info("Loaded Particles: %s" % names)
+        logger.debug("Loaded Particles: %s" % names)
 
     def load_sensor(self):
         try:
