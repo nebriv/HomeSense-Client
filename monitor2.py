@@ -131,6 +131,7 @@ class Monitor(Daemon):
 
     def sched_sleeper(self,time_sleep):
         if self.thread_halt == True:
+            logging.debug("Exiting sched sleeper")
             exit()
         else:
             time.sleep(time_sleep)
@@ -138,6 +139,7 @@ class Monitor(Daemon):
     def device_clock(self):
         while True:
             if self.thread_halt == True:
+                logging.debug("Exiting device clock")
                 break
             if self.start_time == None:
                 self.start_time = datetime.datetime.now()

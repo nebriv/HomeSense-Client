@@ -32,6 +32,7 @@ from threading import Thread
 addr = 0x40
 
 class HTU21DF():
+    stop = False
     def __init__(self):
         global addr
         self.addr = addr
@@ -39,6 +40,8 @@ class HTU21DF():
 
     def run_sensor(self):
         while True:
+            if self.stop:
+                break
             handle = self.pi.i2c_open(self.bus, self.addr)  # open i2c bus
             self.pi.i2c_write_byte(handle, self.rdtemp)  # send read temp command
             time.sleep(.5)  # readings take up to 50ms, lets give it some time
@@ -63,6 +66,8 @@ class HTU21DF():
             self.humidity = ((25 - self.temperature) * -0.15) + uncomp_humidity
             #print(self.temperature)
             #print(self.humidity)
+
+
 
     def setup(self):
         if not self.sensor_running:
