@@ -399,6 +399,9 @@ class Monitor(Daemon):
     def save_particles(self):
         pickled = []
         for each in self.particles:
+            print(each.name)
+
+        for each in self.particles:
             logger.debug("Saving %s State" % each.name)
             pickled.append(pickle.dumps(each))
 
