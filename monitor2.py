@@ -480,7 +480,6 @@ class Monitor(Daemon):
 
         self.get_settings()
 
-        self.add_scheduled_task(self.display.dim, 30)
         t = Thread(target=self.scheduler.run)
         t.start()
         self.initialize_sensors()
