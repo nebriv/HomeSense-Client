@@ -183,14 +183,19 @@ class Monitor(Daemon):
 
         logger.debug("Stopping particles...")
         for particle in self.particles:
-            particle.shutdown()
+            try:
+                particle.shutdown()
+            except Exception as err:
+                logger.warning(err)
 
         logger.debug("Canceling tasks...")
-        for task in self.scheduled_tasks:
-            self.scheduler.cancel(task)
+        try:
+            for task in self.scheduled_tasks:
+                self.scheduler.cancel(task)
+        except Exception as err:
+            logger.debug("%s")
 
         del(self.scheduler)
-
 
         time.sleep(2)
         self.display.clear()
