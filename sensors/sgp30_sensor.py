@@ -1,4 +1,3 @@
-import time
 from smbus2 import SMBusWrapper
 from sgp30 import Sgp30
 import time

@@ -1,5 +1,5 @@
 from sensors.base_sensor import Sensor
-from sensors import sgp30
+from sensors import sgp30_sensor
 import time
 
 addr = 0x58
@@ -19,6 +19,6 @@ class Particle(Sensor):
         return self.name
 
     def get_data(self):
-        return sgp30.SGPsensor.sgp30.eCO2
+        return sgp30_sensor.SGPsensor.sgp30.eCO2
 
 

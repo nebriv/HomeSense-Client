@@ -1,9 +1,9 @@
 from sensors.base_sensor import Sensor
-from sensors import sgp30
+from sensors import sgp30_sensor
 import time
 
 addr = 0x58
-SGPsensor = sgp30.SGPsensor
+SGPsensor = sgp30_sensor.SGPsensor
 
 class Particle(Sensor):
     # REALLY JANK way to share the threaded sensor bus... but it works for now
@@ -25,4 +25,4 @@ class Particle(Sensor):
         return self.name
 
     def get_data(self):
-        return sgp30.SGPsensor.sgp30.TVOC
+        return sgp30_sensor.SGPsensor.sgp30.TVOC
