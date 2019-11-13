@@ -1,8 +1,12 @@
+from tsl2561 import TSL2561
+from time import sleep
+import pigpio
 from sensors.base_sensor import Sensor
 from sensors import temperature_humidity
 import time
 
 addr = 0x40
+
 
 class Particle(Sensor):
     def __init__(self):
@@ -14,7 +18,7 @@ class Particle(Sensor):
         return self.name
 
     def get_data(self):
-        return temperature_humidity.HTU21DFSensor.sensor.relative_humidity
+        return temperature_humidity.HTU21DFSensor.humidity
 
     def setup(self):
         time.sleep(.1)

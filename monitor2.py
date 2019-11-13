@@ -241,7 +241,7 @@ class Monitor(Daemon):
             r = requests.post(self.api_server + "/api/sensors/check_registration/", data=data)
             if r.status_code < 400:
                 self.display.update_screen(["Welcome to HomeSense!"])
-                time.sleep(30)
+                time.sleep(15)
                 return True
             else:
                 if retry > 120:
