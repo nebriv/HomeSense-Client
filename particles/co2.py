@@ -19,6 +19,6 @@ class Particle(Sensor):
         return self.name
 
     def get_data(self):
-        return sgp30_sensor.SGPsensor.sgp30.eCO2
+        return sgp30_sensor.SGPsensor.co2
 
 

@@ -28,10 +28,8 @@ class SGP30():
             self.sgp.init_sgp()
             time.sleep(20)
             self.sensor_running = True
-            print(self.sgp.read_measurements().data())
-
-            self.co2 = self.sgp.read_measurements().data()[0]
-            self.tvoc = self.sgp.read_measurements().data()[1]
+            self.co2 = self.sgp.read_measurements().data[0]
+            self.tvoc = self.sgp.read_measurements().data[1]
 
             print("Sensor Started")
 
