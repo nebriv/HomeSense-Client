@@ -292,6 +292,7 @@ class Monitor(Daemon):
             for each in self.particles:
                 if each.name not in registered_particles:
                     data = {"device_id": self.device_id,
+                            "token": self.token,
                             "particle_name": each.name,
                             "particle_id": each.id,
                             "particle_unit": each.unit}
