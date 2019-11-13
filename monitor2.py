@@ -229,6 +229,7 @@ class Monitor(Daemon):
             logger.debug("Getting sensor settings from cloud")
             #self.display.update_screen(["Getting Sensor Settings"])
             data = {'device_id': self.device_id, 'token': self.token}
+            print(data)
             r = requests.get(self.api_server + "/api/sensors/sensor_settings/", data=data)
             logger.debug(r.text)
             new_settings = r.json()
@@ -492,7 +493,7 @@ class Monitor(Daemon):
             self.wait(self.update_frequency)
 
     def run(self):
-        self.start_device_clock()
+        #self.start_device_clock()
         self.scheduler = sched.scheduler(time.monotonic, self.sched_sleeper)
         logger.debug("Starting Run Statement")
         signal.signal(signal.SIGINT, self.keyboard_interrupt)
@@ -514,6 +515,7 @@ class Monitor(Daemon):
         self.get_settings()
 
         t = Thread(target=self.scheduler.run)
+        t.daemon = True
         t.start()
         self.initialize_sensors()
         self.get_data()
