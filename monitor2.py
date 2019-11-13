@@ -120,6 +120,7 @@ class Monitor(Daemon):
     start_time = None
     threads = []
     thread_halt = False
+    scheduled_tasks = []
     reg_code = None
 
     # Settings
@@ -154,7 +155,8 @@ class Monitor(Daemon):
 
     def add_scheduled_task(self, function, time, **args):
         logger.debug("Adding task: %s" % str(function.__name__))
-        self.scheduler.enter(time, 1, function, (args))
+        task = self.scheduler.enter(time, 1, function, (args))
+        self.scheduled_tasks.append(task)
 
     def check_for_updates(self):
         # TODO: Need to install requirements
@@ -179,8 +181,15 @@ class Monitor(Daemon):
         self.display.update_screen(["Shutting Down!"])
         self.thread_halt = True
 
+        logger.debug("Stopping particles...")
         for particle in self.particles:
             particle.shutdown()
+
+        logger.debug("Canceling tasks...")
+        for task in self.scheduled_tasks:
+            self.scheduler.cancel(task)
+
+        #del(self.scheduler)
 
         time.sleep(2)
         self.display.clear()
