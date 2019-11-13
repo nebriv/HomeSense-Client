@@ -393,13 +393,10 @@ class Monitor(Daemon):
                     self.particles.append(particle)
                     new_sensor = True
 
-        self.save_particles()
         return new_sensor
 
     def save_particles(self):
         pickled = []
-        for each in self.particles:
-            print(each.name)
 
         for each in self.particles:
             logger.debug("Saving %s State" % each.name)
@@ -526,6 +523,7 @@ class Monitor(Daemon):
                 self.load_sensor()
                 if self.get_sensors():
                     self.register_particles()
+                    self.save_sensor()
             except ValueError:
                 self.reset_sensor()
                 self.first_time_setup()
