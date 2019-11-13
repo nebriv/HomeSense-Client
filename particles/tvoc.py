@@ -3,18 +3,18 @@ from sensors import sgp30_sensor
 import time
 
 addr = 0x58
-SGPsensor = sgp30_sensor.SGPsensor
+sgp = sgp30_sensor.SGPsensor
 
 class Particle(Sensor):
     # REALLY JANK way to share the threaded sensor bus... but it works for now
     def __init__(self):
         # Get the SGP global var (initially set to none)
         Sensor.__init__(self)
-        global SGPsensor
+        global sgp
         self.name = "TVoC"
         self.unit = "ppm"
 
-        self.sgpObject = SGPsensor
+        self.sgpObject = sgp
 
     def setup(self):
         time.sleep(.1)
@@ -24,4 +24,4 @@ class Particle(Sensor):
         return self.name
 
     def get_data(self):
-        return sgp30_sensor.SGPsensor.tvoc
+        return self.sgpObject.tvoc
