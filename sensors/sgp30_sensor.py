@@ -23,6 +23,9 @@ class SGP30():
     def shutdown(self):
         print("Stopping SGP30 Bus")
         self.bus.close()
+        print(self.bus)
+        print("Done")
+        del(self.bus)
 
     def setup(self):
         if not self.sensor_running:

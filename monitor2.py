@@ -189,11 +189,14 @@ class Monitor(Daemon):
         for task in self.scheduled_tasks:
             self.scheduler.cancel(task)
 
-        #del(self.scheduler)
+        del(self.scheduler)
+
 
         time.sleep(2)
         self.display.clear()
-        sys.exit(0)
+        logger.debug("Trying to exit...")
+        exit(0)
+
 
     def first_start(self):
         if os.path.isfile("sensor.dat"):
@@ -457,6 +460,8 @@ class Monitor(Daemon):
     def wait(self, sleeptime=120):
         logger.info("Sleeping for %s seconds..." % sleeptime)
         while sleeptime > 0:
+            if self.thread_halt:
+                break
             self.display.update_screen(["Sleeping for %s seconds..." % sleeptime])
             time.sleep(1)
             sleeptime -= 1
