@@ -247,6 +247,9 @@ class Monitor(Daemon):
             self.add_scheduled_task(self.get_settings, self.update_setting_frequency)
 
         except Exception as err:
+            if r:
+                if r.json():
+                    logger.debug(r.json())
             logger.error("Error getting sensor settings from cloud: %s" % err)
 
     def wait_for_registration(self, retry=0):
@@ -446,7 +449,7 @@ class Monitor(Daemon):
 
     def upload_homesense_data(self, data, retry=0):
         try:
-            logger.info("Uploading data...")
+            logger.debug("Uploading data...")
             r = requests.post(self.api_server + "/api/data/add/", data=data)
         except Exception as err:
             if retry > 3:
@@ -467,11 +470,12 @@ class Monitor(Daemon):
             sleeptime -= 1
 
     def get_data(self):
+        logger.info("Getting and uploading data...")
         while True:
             self.display.update_screen(["Collecting Data..."])
             for particle in self.particles:
                 #print(particle.id, particle.name, particle.get_data())
-                logger.info("Getting data...")
+                logger.debug("Getting data: %s" % particle.name)
                 data = {"particle_id": particle.id, "device_id": self.device_id, "particle_data": particle.get_data(), "token": self.token}
                 self.upload_homesense_data(data)
             self.wait(self.update_frequency)
