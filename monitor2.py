@@ -285,10 +285,10 @@ class Monitor(Daemon):
             if settings_updated:
                 self.reload_settings()
 
-            self.add_scheduled_task(self.get_settings, self.update_setting_frequency)
-
         except Exception as err:
             logger.error("Error getting sensor settings from cloud: %s" % err)
+
+        self.add_scheduled_task(self.get_settings, self.update_setting_frequency)
 
     def wait_for_registration(self, retry=0):
         if self.reg_code:
