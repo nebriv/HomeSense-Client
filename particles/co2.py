@@ -1,6 +1,3 @@
-from tsl2561 import TSL2561
-from time import sleep
-import pigpio
 from sensors.base_sensor import Sensor
 from sensors import sgp30
 import time

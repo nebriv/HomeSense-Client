@@ -1,14 +1,4 @@
 import time
-import pigpio
-import math
-import binascii
-from struct import unpack
-from threading import Thread
-#from .base_sensor import Sensor
-import busio
-import adafruit_sgp30
-import board
-import time
 import board
 import busio
 import adafruit_sgp30

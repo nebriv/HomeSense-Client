@@ -255,6 +255,26 @@ class Monitor(Daemon):
                 retry += 1
                 self.wait_for_registration()
 
+    def register_particles(self):
+        try:
+            for each in self.particles:
+                data = {"device_id": self.device_id,
+                        "particle_name": each.name,
+                        "particle_id": each.id,
+                        "particle_unit": each.unit}
+                logger.debug("Uploading particle: %s" % data)
+
+                r = requests.post(self.api_server + "/api/sensors/add_particle/", data=data)
+
+                if r.status_code == 201:
+                    logger.info("Successfully Registered Particle %s" % data['particle_name'])
+                else:
+                    logger.error("Unable to register particle with server: %s %s" % (r.status_code, r.text))
+                    exit()
+        except Exception as err:
+            logger.error("An error occured when registering a particle: %s" % (err))
+            exit()
+
     def register(self):
         if self.homesense_enabled:
             logger.info("Registering with HomeSense server: %s" % self.api_server)
@@ -273,7 +293,6 @@ class Monitor(Daemon):
                 exit()
             try:
                 data['token'] = self.token
-
                 r = requests.post(self.api_server + "/api/sensors/register/", data=data)
                 if r.status_code == 201:
                     logger.info("Successfully Registered Sensor")
@@ -288,25 +307,7 @@ class Monitor(Daemon):
             except Exception as err:
                 logger.error("Unable to register with server: %s" % (err))
                 exit()
-
-            try:
-                for each in self.particles:
-                    data = {"device_id": self.device_id,
-                            "particle_name": each.name,
-                            "particle_id": each.id,
-                            "particle_unit": each.unit}
-                    logger.debug("Uploading particle: %s" % data)
-
-                    r = requests.post(self.api_server + "/api/sensors/add_particle/", data=data)
-
-                    if r.status_code == 201:
-                        logger.info("Successfully Registered Particle %s" % data['particle_name'])
-                    else:
-                        logger.error("Unable to register particle with server: %s %s" % (r.status_code, r.text))
-                        exit()
-            except Exception as err:
-                logger.error("An error occured when registering a particle: %s" % (err))
-                exit()
+            self.register_particles()
             self.wait_for_registration()
 
 
