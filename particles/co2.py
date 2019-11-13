@@ -13,7 +13,9 @@ class Particle(Sensor):
         self.unit = "ppm"
 
     def setup(self):
-        pass
+        time.sleep(.1)
+        if not self.sgpObject.sensor_running:
+            self.sgpObject.setup()
 
     def get_name(self):
         return self.name

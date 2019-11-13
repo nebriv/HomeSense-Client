@@ -11,6 +11,8 @@ class SGP30():
         global addr
         self.addr = addr
         self.sensor_running = False
+        self.co2 = 0
+        self.tvoc = 0
 
     def get_data(self):
         return(self.sgp30.eCO2, self.sgp30.TVOC)
@@ -30,7 +32,7 @@ class SGP30():
             self.sensor_running = True
             self.co2 = self.sgp.read_measurements().data[0]
             self.tvoc = self.sgp.read_measurements().data[1]
-
+            time.sleep(2)
             print("Sensor Started")
 
 SGPsensor = SGP30()
