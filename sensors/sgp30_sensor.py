@@ -1,4 +1,6 @@
-from smbus2 import SMBusWrapper
+#from smbus2 import SMBusWrapper
+import smbus2
+
 from sgp30 import Sgp30
 import time
 
@@ -19,24 +21,18 @@ class SGP30():
     def setup(self):
         if not self.sensor_running:
             print("Initializing SGP30 Sensor...")
-            with SMBusWrapper(1) as bus:
-                self.sgp = Sgp30(bus)  # things thing with the baselinefile is dumb and will be changed in the future
-                #print("resetting all i2c devices")
-                self.sgp.i2c_geral_call()  # WARNING: Will reset any device on teh i2cbus that listens for general call
-                # print(self.sgp.read_features())
-                # print(self.sgp.read_serial())
-                self.sgp.init_sgp()
-                time.sleep(20)
+            bus = smbus2.SMBus(1)
 
-            # i2c = busio.I2C(board.SCL, board.SDA, frequency=100000)
-            # time.sleep(.5)
-            # self.sgp30 = adafruit_sgp30.Adafruit_SGP30(i2c)
-            # time.sleep(.5)
-            # self.sgp30.iaq_init()
-            # time.sleep(10)
-            self.raw = self.sgp.read_measurements().data
-            self.co2 = self.sgp.read_measurements().data[0]
-            self.tvoc = self.sgp.read_measurements().data[1]
+            self.sgp = Sgp30(bus)
+            self.sgp.i2c_geral_call()
+            self.sgp.init_sgp()
+            time.sleep(20)
+            self.sensor_running = True
+            print(self.sgp.read_measurements().data())
+
+            self.co2 = self.sgp.read_measurements().data()[0]
+            self.tvoc = self.sgp.read_measurements().data()[1]
+
             print("Sensor Started")
 
 SGPsensor = SGP30()
@@ -46,6 +42,5 @@ if __name__ == "__main__":
     while True:
         print(SGPsensor.tvoc)
         print(SGPsensor.co2)
-        print(SGPsensor.raw)
         print(SGPsensor.sgp.read_measurements())
         time.sleep(1)
