@@ -13,6 +13,9 @@ class Sensor(object):
     def get_name(self):
         return self.name
 
+    def shutdown(self):
+        pass
+
     def get_data(self):
         return NotImplementedError
 

@@ -20,12 +20,16 @@ class SGP30():
     def run_sensor(self):
         pass
 
+    def shutdown(self):
+        print("Stopping SGP30 Bus")
+        self.bus.close()
+
     def setup(self):
         if not self.sensor_running:
             print("Initializing SGP30 Sensor...")
-            bus = smbus2.SMBus(1)
+            self.bus = smbus2.SMBus(1)
 
-            self.sgp = Sgp30(bus)
+            self.sgp = Sgp30(self.bus)
             self.sgp.i2c_geral_call()
             self.sgp.init_sgp()
             time.sleep(20)

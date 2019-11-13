@@ -16,6 +16,9 @@ class Particle(Sensor):
         time.sleep(.1)
         sgp.setup()
 
+    def shutdown(self):
+        sgp.shutdown()
+
     def get_name(self):
         return self.name
 

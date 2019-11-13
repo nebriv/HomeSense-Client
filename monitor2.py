@@ -178,6 +178,10 @@ class Monitor(Daemon):
         logger.info("Keyboard Interrupt - Shutting Down")
         self.display.update_screen(["Shutting Down!"])
         self.thread_halt = True
+
+        for particle in self.particles:
+            particle.shutdown()
+
         time.sleep(2)
         self.display.clear()
         sys.exit(0)
