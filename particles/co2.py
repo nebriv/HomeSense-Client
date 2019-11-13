@@ -18,8 +18,7 @@ class Particle(Sensor):
 
     def setup(self):
         time.sleep(.1)
-        if not self.sgpObject.sensor_running:
-            self.sgpObject.setup()
+        self.sgpObject.setup()
 
     def get_name(self):
         return self.name
