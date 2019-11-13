@@ -10,9 +10,10 @@ class Particle(Sensor):
     def __init__(self):
         # Get the SGP global var (initially set to none)
         Sensor.__init__(self)
+        global SGPsensor
         self.name = "CO2"
         self.unit = "ppm"
-        global SGPsensor
+
         self.sgpObject = SGPsensor
 
     def setup(self):
@@ -25,5 +26,3 @@ class Particle(Sensor):
 
     def get_data(self):
         return sgp30_sensor.SGPsensor.co2
-
-
