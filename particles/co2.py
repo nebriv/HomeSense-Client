@@ -20,3 +20,5 @@ class Particle(Sensor):
 
     def get_data(self):
         return sgp30.SGPsensor.sgp30.eCO2
+
+
