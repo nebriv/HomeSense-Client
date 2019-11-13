@@ -16,7 +16,7 @@ import pkgutil
 import sys
 import pickle
 import sched
-
+import threading
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
 
@@ -181,6 +181,9 @@ class Monitor(Daemon):
         self.display.update_screen(["Shutting Down!"])
         self.thread_halt = True
 
+        logger.debug("Number of running threads: %s" % threading.active_count() )
+        print(threading.enumerate())
+
         logger.debug("Stopping particles...")
         for particle in self.particles:
             try:
@@ -193,13 +196,15 @@ class Monitor(Daemon):
             for task in self.scheduled_tasks:
                 self.scheduler.cancel(task)
         except Exception as err:
-            logger.debug("%s")
+            logger.debug("%s" % err)
 
         del(self.scheduler)
 
         time.sleep(2)
         self.display.clear()
         logger.debug("Trying to exit...")
+        logger.debug("Number of running threads: %s" % threading.active_count() )
+        print(threading.enumerate())
         exit(0)
 
 
