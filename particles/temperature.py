@@ -15,7 +15,7 @@ class Particle(Sensor):
         return self.name
 
     def shutdown(self):
-        temperature_humidity.stop = True
+        temperature_humidity.HTU21DFSensor.stop = True
 
     def get_data(self):
         if self.unit == "celsius":

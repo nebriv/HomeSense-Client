@@ -40,6 +40,9 @@ class HTU21DF():
         self.addr = addr
         self.sensor_running = False
 
+    def shutdown(self):
+        self.stop = True
+
     def run_sensor(self):
         while True:
             if self.stop:
@@ -69,8 +72,6 @@ class HTU21DF():
             self.humidity = ((25 - self.temperature) * -0.15) + uncomp_humidity
             #print(self.temperature)
             #print(self.humidity)
-
-
 
     def setup(self):
         if not self.sensor_running:
