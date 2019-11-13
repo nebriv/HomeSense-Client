@@ -225,6 +225,7 @@ class Monitor(Daemon):
             #self.display.update_screen(["Getting Sensor Settings"])
             data = {'device_id': self.device_id, 'token': self.token}
             r = requests.get(self.api_server + "/api/sensors/sensor_settings/", data=data)
+            logger.debug(r.text)
             new_settings = r.json()
             if "update_frequency" in new_settings:
                 if new_settings['update_frequency'] != self.update_frequency:
