@@ -184,7 +184,7 @@ class Monitor(Daemon):
         self.thread_halt = True
 
         logger.debug("Number of running threads: %s" % threading.active_count() )
-        print(threading.enumerate())
+
 
         logger.debug("Stopping particles...")
         for particle in self.particles:
@@ -206,7 +206,6 @@ class Monitor(Daemon):
         self.display.clear()
         logger.debug("Trying to exit...")
         logger.debug("Number of running threads: %s" % threading.active_count() )
-        print(threading.enumerate())
         exit(0)
 
 
