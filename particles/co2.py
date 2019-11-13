@@ -4,6 +4,7 @@ import time
 
 addr = 0x58
 sgp = sgp30_sensor.SGPsensor
+print(dir(sgp))
 
 class Particle(Sensor):
     # REALLY JANK way to share the threaded sensor bus... but it works for now
@@ -13,7 +14,7 @@ class Particle(Sensor):
         global sgp
         self.name = "CO2"
         self.unit = "ppm"
-
+        print("HELLO!?")
         self.sgpObject = sgp
 
     def setup(self):
