@@ -41,9 +41,11 @@ def reset_to_host_mode():
 
 
 def run_command(command):
-    result = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE).stdout
-    result = str(result.read())
-    return result.encode("utf-8")
+
+    result = subprocess.check_output(command.split(" "))
+    #result = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE).stdout
+    result = str(result)
+    return result
 
 def test_network_connection():
     r = run_command("ping 8.8.8.8 -c 1")
