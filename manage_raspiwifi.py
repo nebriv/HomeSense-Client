@@ -1,6 +1,8 @@
 import os
 import fileinput
 import subprocess
+import time
+
 def reset_to_host_mode():
     if not os.path.isfile('/etc/raspiwifi/host_mode'):
         os.system('rm -f /etc/wpa_supplicant/wpa_supplicant.conf')
@@ -15,6 +17,13 @@ def reset_to_host_mode():
         os.system('cp /usr/lib/raspiwifi/reset_device/static_files/dhcpcd.conf /etc/')
         os.system('touch /etc/raspiwifi/host_mode')
 
+        os.system("systemctl stop dnsmasq")
+        os.system("systemctl stop dhcpcd")
+        os.system("systemctl stop wpa_supplicant")
+        os.system("killall wpa_supplicant")
+        os.system("ifconfig wlan0 down")
+        os.system("ifconfig wlan0 up")
+        time.sleep(1)
         os.system("hostapd -d /etc/hostapd/hostapd.conf -B")
         os.system("systemctl start dnsmasq")
         os.system("systemctl start dhcpcd")
@@ -28,7 +37,7 @@ def reset_to_client_mode():
     os.system("killall hostapd")
     os.system("ifconfig down wlan0")
     os.system("ifconfig up wlan0")
-    os.system("wpa_supplicant -c wpa_supplicant.conf -i wlan0 -B")
+    os.system("wpa_supplicant -c /etc/wpa_supplicant/wpa_supplicant.conf -i wlan0 -B")
 
 if __name__ == "__main__":
     reset_to_host_mode()
