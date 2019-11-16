@@ -47,9 +47,10 @@ def run_command(command):
 
 def test_network_connection():
     r = run_command("ping 8.8.8.8 -c 1")
-    print(r)
+    print(r.encode("utf-8"))
     if "bytes from 8.8.8.8" in r:
         return True
+    return False
 
 def reset_to_client_mode():
     print("Removing host mode flag")
