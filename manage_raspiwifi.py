@@ -80,3 +80,6 @@ if __name__ == "__main__":
     elif args.client:
         print("Running in Client Mode")
         reset_to_client_mode()
+    else:
+        print("No arguments.")
+        exit()
