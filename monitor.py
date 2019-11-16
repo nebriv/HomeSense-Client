@@ -3,30 +3,27 @@
 # from lux import get_lux
 # from pres_alt import get_pres
 
-import time
-import requests
+import logging
+import os
+import pickle
+import pkgutil
+import signal
 import subprocess
 import sys
-import git
-from lib.daemon import Daemon
+import time
+import uuid
 from configparser import ConfigParser
-import os
+
+import git
+import psutil
+import requests
+
+from lib.daemon import Daemon
+from lib.display import Display
+
 # from sensors import lux, pressure_altitude, temperature_humidity, sgp30
 # from sensors import base_sensor
 #
-import sensors
-
-import logging
-import psutil
-import uuid
-from lib.display import Display
-import signal
-import importlib
-import pkgutil
-import pkgutil
-import sys
-import sensors
-import pickle
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
 

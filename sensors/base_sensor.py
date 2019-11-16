@@ -2,6 +2,7 @@ import uuid
 
 addr = None
 
+
 class Sensor(object):
     def __init__(self):
         self.name = "Not Implemented"
@@ -24,6 +25,7 @@ class Sensor(object):
 
     def __eq(self, other):
         return self.name == other.name
+
 
 def main():
     sensor = Sensor()

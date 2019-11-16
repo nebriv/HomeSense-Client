@@ -1,13 +1,13 @@
-from sensors.base_sensor import Sensor
-from sensors import temperature_humidity
 import time
+
+from sensors import temperature_humidity
+from sensors.base_sensor import Sensor
 
 addr = 0x40
 
 class Particle(Sensor):
     def __init__(self):
         Sensor.__init__(self)
-        global HTU21DF
         self.name = "Temperature"
         self.unit = "fahrenheit"
 

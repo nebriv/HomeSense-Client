@@ -1,8 +1,8 @@
 #from smbus2 import SMBusWrapper
-import smbus2
-
-from sgp30 import Sgp30
 import time
+
+import smbus2
+from sgp30 import Sgp30
 
 addr = 0x58
 

@@ -23,12 +23,13 @@ Changes:        23rd Jan 2009 (David Mytton <david@boxedice.com>)
 
 # Core modules
 from __future__ import print_function
+
 import atexit
 import errno
 import os
+import signal
 import sys
 import time
-import signal
 
 
 class Daemon(object):
@@ -37,6 +38,7 @@ class Daemon(object):
 
     Usage: subclass the Daemon class and override the run() method
     """
+
     def __init__(self, pidfile, stdin=os.devnull,
                  stdout=os.devnull, stderr=os.devnull,
                  home_dir='.', umask=0o22, verbose=1,
@@ -91,23 +93,23 @@ class Daemon(object):
                 "fork #2 failed: %d (%s)\n" % (e.errno, e.strerror))
             sys.exit(1)
 
-        #if sys.platform != 'darwin':  # This block breaks on OS X
-            # Redirect standard file descriptors
-            #sys.stdout.flush()
-            #sys.stderr.flush()
-            #si = open(self.stdin, 'r')
-            #so = open(self.stdout, 'a+')
-            #if self.stderr:
-            #    try:
-            #        se = open(self.stderr, 'a+', 0)
-            #    except ValueError:
-            #        # Python 3 can't have unbuffered text I/O
-            #        se = open(self.stderr, 'a+', 1)
-            #else:
-            #    se = so
-            #os.dup2(si.fileno(), sys.stdin.fileno())
-            #os.dup2(so.fileno(), sys.stdout.fileno())
-            #os.dup2(se.fileno(), sys.stderr.fileno())
+        # if sys.platform != 'darwin':  # This block breaks on OS X
+        # Redirect standard file descriptors
+        # sys.stdout.flush()
+        # sys.stderr.flush()
+        # si = open(self.stdin, 'r')
+        # so = open(self.stdout, 'a+')
+        # if self.stderr:
+        #    try:
+        #        se = open(self.stderr, 'a+', 0)
+        #    except ValueError:
+        #        # Python 3 can't have unbuffered text I/O
+        #        se = open(self.stderr, 'a+', 1)
+        # else:
+        #    se = so
+        # os.dup2(si.fileno(), sys.stdin.fileno())
+        # os.dup2(so.fileno(), sys.stdout.fileno())
+        # os.dup2(se.fileno(), sys.stderr.fileno())
 
         def sigtermhandler(signum, frame):
             self.daemon_alive = False

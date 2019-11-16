@@ -1,5 +1,4 @@
 import logging
-from logging.config import dictConfig
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)

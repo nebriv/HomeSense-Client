@@ -4,8 +4,10 @@
 # This code is designed to work with the MPL3115A2_I2CS I2C Mini Module available from ControlEverything.com.
 # https://www.controleverything.com/products
 
-import smbus
 import time
+
+import smbus
+
 from sensors.base_sensor import Sensor
 
 addr = 0x60

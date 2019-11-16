@@ -1,24 +1,25 @@
-import time
 import datetime
-import requests
-import subprocess
-import git
-from lib.daemon import Daemon
-from configparser import ConfigParser
-import os
-from threading import Thread
 import logging
-import psutil
-import uuid
-from lib.display import Display
-import signal
-import pkgutil
-import sys
+import os
 import pickle
+import pkgutil
 import sched
+import signal
+import subprocess
+import sys
 import threading
-
+import time
+import uuid
+from configparser import ConfigParser
 from logging.handlers import RotatingFileHandler
+from threading import Thread
+
+import git
+import psutil
+import requests
+
+from lib.daemon import Daemon
+from lib.display import Display
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
@@ -127,6 +128,8 @@ class Monitor(Daemon):
     scheduled_tasks = []
     reg_code = None
 
+    token = None
+
     # Settings
     update_setting_frequency = 30
     update_frequency = 600
@@ -135,7 +138,7 @@ class Monitor(Daemon):
     log_level = "INFO"
 
     def sched_sleeper(self,time_sleep):
-        if self.thread_halt == True:
+        if self.thread_halt:
             logging.debug("Exiting sched sleeper")
             exit()
         else:
@@ -143,10 +146,10 @@ class Monitor(Daemon):
 
     def device_clock(self):
         while True:
-            if self.thread_halt == True:
+            if self.thread_halt:
                 logging.debug("Exiting device clock")
                 break
-            if self.start_time == None:
+            if self.start_time is None:
                 self.start_time = datetime.datetime.now()
             else:
                 now = datetime.datetime.now()
@@ -212,7 +215,6 @@ class Monitor(Daemon):
         logger.debug("Trying to exit...")
         logger.debug("Number of running threads: %s" % threading.active_count() )
         exit(0)
-
 
     def first_start(self):
         if os.path.isfile("sensor.dat"):

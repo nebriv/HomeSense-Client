@@ -1,6 +1,7 @@
-from sensors.base_sensor import Sensor
-from sensors import sgp30_sensor
 import time
+
+from sensors import sgp30_sensor
+from sensors.base_sensor import Sensor
 
 addr = 0x58
 sgp = sgp30_sensor.SGPsensor

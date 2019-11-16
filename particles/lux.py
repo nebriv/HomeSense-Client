@@ -1,6 +1,5 @@
 from tsl2561 import TSL2561
-from time import sleep
-import pigpio
+
 from sensors.base_sensor import Sensor
 
 addr = 0x39

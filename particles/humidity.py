@@ -1,6 +1,7 @@
-from sensors.base_sensor import Sensor
-from sensors import temperature_humidity
 import time
+
+from sensors import temperature_humidity
+from sensors.base_sensor import Sensor
 
 addr = 0x40
 
