@@ -22,22 +22,61 @@ def reset_to_host_mode():
         os.system("systemctl stop wpa_supplicant")
         os.system("killall wpa_supplicant")
         os.system("ifconfig wlan0 down")
-        os.system("ifconfig wlan0 up")
         time.sleep(1)
         os.system("hostapd -d /etc/hostapd/hostapd.conf -B")
         os.system("systemctl start dnsmasq")
         os.system("systemctl start dhcpcd")
         os.system("touch /etc/raspiwifi/host_mode")
 
+def run_command(command):
+    result = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE).stdout
+    result = result.read()
+    return result
+
+def test_network_connection():
+    r = run_command("ping 8.8.8.8 -c 1")
+    print(r)
+    if "bytes from 8.8.8.8" in r:
+        return True
 
 def reset_to_client_mode():
-    os.system("rm /etc/raspiwifi/host_mode")
-    os.system("systemctl stop dhcpcd")
-    os.system("systemctl stop dnsmasq")
-    os.system("killall hostapd")
-    os.system("ifconfig down wlan0")
-    os.system("ifconfig up wlan0")
-    os.system("wpa_supplicant -c /etc/wpa_supplicant/wpa_supplicant.conf -i wlan0 -B")
+    print("Removing host mode flag")
+    run_command("rm /etc/raspiwifi/host_mode")
+    print("Stopping dhcpcd and dnsmasq")
+    run_command("systemctl stop dhcpcd")
+    run_command("systemctl stop dnsmasq")
+    print("Stopping hostapd")
+    run_command("killall hostapd")
+    print("Bringing wlan0 down and back up")
+    run_command("ifconfig down wlan0")
+    run_command("ifconfig up wlan0")
+    time.sleep(1)
+    print("Starting wpa_supplicant")
+    run_command("wpa_supplicant -c /etc/wpa_supplicant/wpa_supplicant.conf -i wlan0 -B")
+    print("Starting dhclient")
+    run_command("dhclient wlan0")
+    print("Testing network connection")
+    if run_command():
+        print("We're connected")
+    else:
+        print("uhhh trying again?")
+        reset_to_client_mode()
+
 
 if __name__ == "__main__":
-    reset_to_host_mode()
+    import argparse
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--host", action='store_true')
+    parser.add_argument("--client", action='store_true')
+
+    args = parser.parse_args()
+    if args.host and args.client:
+        print("Wrong answer")
+        exit()
+    elif args.host:
+        print("Running in AP Host Mode")
+        reset_to_host_mode()
+    elif args.client:
+        print("Running in Client Mode")
+        reset_to_client_mode()
