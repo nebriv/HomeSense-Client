@@ -42,17 +42,26 @@ def test_network_connection():
 def reset_to_client_mode():
     print("Removing host mode flag")
     run_command("rm /etc/raspiwifi/host_mode")
+
     print("Stopping dhcpcd and dnsmasq")
     run_command("systemctl stop dhcpcd")
     run_command("systemctl stop dnsmasq")
+
     print("Stopping hostapd")
     run_command("killall hostapd")
+
     print("Bringing wlan0 down and back up")
     run_command("ifconfig down wlan0")
     run_command("ifconfig up wlan0")
     time.sleep(1)
+
     print("Starting wpa_supplicant")
-    run_command("wpa_supplicant -c /etc/wpa_supplicant/wpa_supplicant.conf -i wlan0 -B")
+    if os.path.isfile('/etc/wpa_supplicant/wpa_supplicant.conf'):
+        run_command("wpa_supplicant -c /etc/wpa_supplicant/wpa_supplicant.conf -i wlan0 -B")
+    elif os.path.isfile('/etc/wpa_supplicant/wpa_supplicant.conf.original'):
+        print("Using original file")
+        run_command("wpa_supplicant -c /etc/wpa_supplicant/wpa_supplicant.conf.original -i wlan0 -B")
+
     print("Starting dhclient")
     run_command("dhclient wlan0")
     print("Testing network connection")
