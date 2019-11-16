@@ -6,6 +6,7 @@ from RaspiWifi.libs.configuration_app import app
 
 def reset_to_host_mode():
     if not os.path.isfile('/etc/raspiwifi/host_mode'):
+        print("Cleaning up config files")
         os.system('rm -f /etc/wpa_supplicant/wpa_supplicant.conf')
         os.system('rm -f /home/pi/Projects/RaspiWifi/tmp/*')
         os.system('rm /etc/cron.raspiwifi/apclient_bootstrapper')
@@ -18,16 +19,24 @@ def reset_to_host_mode():
         os.system('cp /usr/lib/raspiwifi/reset_device/static_files/dhcpcd.conf /etc/')
         os.system('touch /etc/raspiwifi/host_mode')
 
+        print("Stopping services")
         os.system("systemctl stop dnsmasq")
         os.system("systemctl stop dhcpcd")
         os.system("systemctl stop wpa_supplicant")
+        print("Killing running processes")
         os.system("killall wpa_supplicant")
+        os.system("killall hostapd")
+
+        print("Bringing wlan0 down")
         os.system("ifconfig wlan0 down")
         time.sleep(1)
+        print("Starting hostapd")
         os.system("hostapd -d /etc/hostapd/hostapd.conf -B")
+        print("Starting dnsmasq and dhcpcd")
         os.system("systemctl start dnsmasq")
         os.system("systemctl start dhcpcd")
         os.system("touch /etc/raspiwifi/host_mode")
+        print("Running raspiwifi app")
         app.app.run(host='0.0.0.0', port=80)
 
 
