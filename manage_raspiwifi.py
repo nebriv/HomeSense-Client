@@ -2,6 +2,7 @@ import os
 import fileinput
 import subprocess
 import time
+from RaspiWifi.libs.configuration_app import app
 
 def reset_to_host_mode():
     if not os.path.isfile('/etc/raspiwifi/host_mode'):
@@ -27,6 +28,8 @@ def reset_to_host_mode():
         os.system("systemctl start dnsmasq")
         os.system("systemctl start dhcpcd")
         os.system("touch /etc/raspiwifi/host_mode")
+        app.app.run(host='0.0.0.0', port=80)
+
 
 def run_command(command):
     result = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE).stdout
@@ -65,7 +68,7 @@ def reset_to_client_mode():
     print("Starting dhclient")
     run_command("dhclient wlan0")
     print("Testing network connection")
-    if run_command():
+    if test_network_connection():
         print("We're connected")
     else:
         print("uhhh trying again?")
