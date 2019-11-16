@@ -42,7 +42,7 @@ def reset_to_host_mode():
 
 def run_command(command):
     result = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE).stdout
-    result = result.read()
+    result = str(result.read())
     return result.encode("utf-8")
 
 def test_network_connection():
