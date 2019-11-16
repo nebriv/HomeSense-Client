@@ -48,7 +48,7 @@ def run_command(command):
     return result
 
 def test_network_connection():
-    r = run_command("ping 8.8.8.8 -c 1")
+    r = run_command("ping 8.8.8.8 -c 3")
     print(r)
     if "bytes from 8.8.8.8" in r:
         return True
