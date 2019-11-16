@@ -38,6 +38,8 @@ def reset_to_host_mode():
         os.system("touch /etc/raspiwifi/host_mode")
         print("Running raspiwifi app")
         app.app.run(host='0.0.0.0', port=80)
+    else:
+        print("AP mode already running")
 
 
 def run_command(command):

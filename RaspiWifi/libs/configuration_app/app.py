@@ -71,7 +71,7 @@ def save_wpa_credentials():
 
 ######## FUNCTIONS ##########
 
-def scan_wifi_networks():
+def scan_wifi_networks(retry=3):
     iwlist_raw = subprocess.Popen(['iwlist', 'scan'], stdout=subprocess.PIPE)
     ap_list, err = iwlist_raw.communicate()
     ap_array = []
@@ -81,6 +81,11 @@ def scan_wifi_networks():
             ap_ssid = line[27:-1]
             if ap_ssid != '':
                 ap_array.append(ap_ssid)
+
+    if len(ap_array) == 0 and retry > 0:
+        print("No networks found")
+        retry = retry - 1
+        scan_wifi_networks(retry)
 
     return ap_array
 
