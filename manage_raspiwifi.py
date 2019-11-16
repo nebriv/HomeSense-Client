@@ -42,8 +42,8 @@ def reset_to_host_mode():
 
 def run_command(command):
 
-    result = subprocess.check_output(command.split(" "))
-    #result = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE).stdout
+    #result = subprocess.check_output(command.split(" "))
+    result = subprocess.run(command.split(" "), stdout=subprocess.PIPE).stdout.decode("utf-8")
     result = str(result)
     return result
 
