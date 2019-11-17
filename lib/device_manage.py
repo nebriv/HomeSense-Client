@@ -6,9 +6,14 @@ from RaspiWifi.libs.configuration_app import app
 import multiprocessing, signal
 import socket
 from lib import conn_test
+import display
+
+
 
 def reset_to_host_mode():
     if not os.path.isfile('/etc/raspiwifi/host_mode'):
+        display.screen.display_blocker("Wifi Host")
+        display.screen.update_screen(["Starting WiFi..."], "Wifi Host")
         print("Cleaning up config files")
         run_command('rm -f /etc/wpa_supplicant/wpa_supplicant.conf')
         run_command('rm -f /home/pi/Projects/RaspiWifi/tmp/*')
@@ -31,11 +36,13 @@ def reset_to_host_mode():
         run_command("ifconfig wlan0 down")
         time.sleep(1)
         print("Starting hostapd")
+
         run_command("hostapd -d /etc/hostapd/hostapd.conf -B")
         print("Starting dnsmasq and dhcpcd")
         run_command("systemctl start dnsmasq")
         run_command("systemctl start dhcpcd")
         run_command("touch /etc/raspiwifi/host_mode")
+        display.screen.update_screen(["Connect to WiFi:", "HomeSense Wifi"], "Wifi Host")
         print("Running raspiwifi app")
 
         app_args = {"host": "0.0.0.0", "port":80}
@@ -48,6 +55,7 @@ def reset_to_host_mode():
                 p.terminate()
                 break
         #app.app.run(host='0.0.0.0', port=80)
+        display.screen.remove_blocker()
         reset_to_client_mode()
     else:
         print("AP mode already running")
@@ -97,7 +105,16 @@ def reset_to_client_mode(retry=3):
             return False
 
 def reset_device():
+    display.screen.display_blocker("Wifi Host")
+    display.screen.update_screen(["Starting WiFi..."], "Wifi Host")
     run_command("rm /home/pi/HomeSense/sensor.dat")
+    run_command('rm -f /etc/wpa_supplicant/wpa_supplicant.conf')
+    run_command('rm -f /home/pi/Projects/RaspiWifi/tmp/*')
+    run_command('mv /etc/dhcpcd.conf /etc/dhcpcd.conf.original')
+    run_command('cp /usr/lib/raspiwifi/reset_device/static_files/dhcpcd.conf /etc/')
+    run_command('mv /etc/dnsmasq.conf /etc/dnsmasq.conf.original')
+    run_command('cp /usr/lib/raspiwifi/reset_device/static_files/dnsmasq.conf /etc/')
+    run_command('cp /usr/lib/raspiwifi/reset_device/static_files/dhcpcd.conf /etc/')
     run_command("reboot")
 
 if __name__ == "__main__":

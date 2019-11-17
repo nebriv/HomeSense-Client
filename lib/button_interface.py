@@ -1,6 +1,7 @@
 import RPi.GPIO as GPIO
 import time
 import display
+import device_manage
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(17, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
@@ -51,9 +52,12 @@ class UI:
             counter += 1
             if GPIO.input(17) == 1:
                 self.display.update_screen(["Reseting Wifi"], "Button Interface")
-                time.sleep(5)
+                time.sleep(2)
                 self.display.remove_blocker()
                 self.display.clear()
+                device_manage.reset_to_host_mode()
+                #time.sleep(5)
+
                 break
             if counter > 10:
                 self.display.update_screen(["Reset Wifi timed out."], "Button Interface")
@@ -69,9 +73,10 @@ class UI:
             counter += 1
             if GPIO.input(17) == 1:
                 self.display.update_screen(["Reseting Device"], "Button Interface")
-                time.sleep(5)
+                time.sleep(2)
                 self.display.remove_blocker()
                 self.display.clear()
+                device_manage.reset_device()
                 break
             if counter > 10:
                 self.display.update_screen(["Reset Device timed out."], "Button Interface")
