@@ -18,7 +18,7 @@ class UI:
         while True:
             self.display.update_screen(["Waiting for button press"])
             while GPIO.input(17) == 1:
-                self.display.update_screen(["Press and hold", "5=Reset Wifi", "15=Reset Device"])
+                self.display.update_screen(["5 = Wifi", "15 = Device"])
                 time.sleep(1)
                 self.counter += 1
                 if reset_device > self.counter > reset_wifi:
@@ -37,9 +37,11 @@ class UI:
 
     def reset_wifi(self):
         self.display.update_screen(["Reseting Wifi"])
+        time.sleep(5)
 
     def reset_device(self):
         self.display.update_screen(["Reseting Device"])
+        time.sleep(5)
         self.display.clear()
 
 
