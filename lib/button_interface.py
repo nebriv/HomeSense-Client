@@ -1,6 +1,6 @@
 import RPi.GPIO as GPIO
 import time
-from .display import Display
+from display import Display
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(17, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
@@ -16,13 +16,15 @@ class UI:
 
     def wait_for_press(self):
         while True:
+            self.display.update_screen(["Waiting for button press"])
             while GPIO.input(17) == 1:
+                self.display.update_screen(["Press and hold", "5=Reset Wifi", "15=Reset Device"])
                 time.sleep(1)
                 self.counter += 1
                 if reset_device > self.counter > reset_wifi:
-                    self.display.update_screen("Reset WiFi Connection?")
+                    self.display.update_screen(["Reset WiFi Connection?"])
                 elif self.counter > reset_device:
-                    self.display.update_screen("Reset HomeSense Sensor?")
+                    self.display.update_screen(["Reset HomeSense Sensor?"])
                 if self.halt:
                     break
             if reset_device > self.counter > reset_wifi:
@@ -34,10 +36,11 @@ class UI:
                 break
 
     def reset_wifi(self):
-        self.display.update_screen("Reseting Wifi")
+        self.display.update_screen(["Reseting Wifi"])
 
     def reset_device(self):
-        self.display.update_screen("Reseting Device")
+        self.display.update_screen(["Reseting Device"])
+        self.display.clear()
 
 
 if __name__ == "__main__":
