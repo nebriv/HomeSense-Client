@@ -495,8 +495,15 @@ class Monitor(Daemon):
             #self.display.update_screen(["Connect to wifi:", "HomeSense Setup"])
 
             # Run it as a module to escape import headaches...
+            logger.info("Running Device Wifi Setup")
             command = "sudo python3 -m lib.device_manage --host"
-            subprocess.run(command.split(" "), stdout=subprocess.PIPE).stdout.decode("utf-8")
+            p = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
+            while True:
+                line = p.stdout.readline()
+                print(line)
+                if not line: break
+
+            #subprocess.run(command.split(" "), stdout=subprocess.PIPE).stdout.decode("utf-8")
             #manage_raspiwifi.reset_to_host_mode()
             #time.sleep(1)
             #command = "sudo python3 lib/manage_raspiwifi.py --client"
