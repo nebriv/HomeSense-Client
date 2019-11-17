@@ -46,6 +46,9 @@ class UI:
             if GPIO.input(17) == 1:
                 self.display.update_screen(["Reseting Wifi"], "Button Interface")
                 time.sleep(5)
+                self.display.remove_blocker()
+                self.display.clear()
+                break
             if counter > 10:
                 self.display.update_screen(["Reset Wifi timed out."], "Button Interface")
                 break
@@ -59,6 +62,9 @@ class UI:
             if GPIO.input(17) == 1:
                 self.display.update_screen(["Reseting Device"], "Button Interface")
                 time.sleep(5)
+                self.display.remove_blocker()
+                self.display.clear()
+                break
             if counter > 10:
                 self.display.update_screen(["Reset Device timed out."], "Button Interface")
                 break
