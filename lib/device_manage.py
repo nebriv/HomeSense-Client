@@ -2,7 +2,7 @@ import os
 import fileinput
 import subprocess
 import time
-from RaspiWifi.libs.configuration_app import app
+import RaspiWifi.libs.configuration_app.app as app
 import multiprocessing, signal
 import socket
 import conn_test

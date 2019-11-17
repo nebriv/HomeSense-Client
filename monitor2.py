@@ -562,12 +562,13 @@ class Monitor(Daemon):
 
     def run(self):
         #self.start_device_clock()
-        self.start_button_monitor()
+
         self.scheduler = sched.scheduler(time.monotonic, self.sched_sleeper)
         logger.debug("Starting Run Statement")
         signal.signal(signal.SIGINT, self.keyboard_interrupt)
         self.display = display.screen
         self.display.update_screen(["Booting..."])
+        self.start_button_monitor()
         time.sleep(1)
         self.check_for_updates()
         self.load_config()
