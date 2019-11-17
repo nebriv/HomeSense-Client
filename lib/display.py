@@ -46,6 +46,7 @@ class Display:
 
     def onexit(self, signal, frame):
         self.clear()
+        exit()
 
     def clear(self):
         if import_success:

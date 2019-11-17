@@ -87,5 +87,6 @@ if __name__ == "__main__":
         bm.wait_for_press()
     except KeyboardInterrupt:
         halt = True
+        exit()
 
 
