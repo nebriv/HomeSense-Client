@@ -19,7 +19,7 @@ import psutil
 import requests
 
 from lib.daemon import Daemon
-from lib.display import Display
+from lib import display
 from lib import manage_raspiwifi
 from lib import conn_test
 from lib import button_interface
@@ -566,7 +566,7 @@ class Monitor(Daemon):
         self.scheduler = sched.scheduler(time.monotonic, self.sched_sleeper)
         logger.debug("Starting Run Statement")
         signal.signal(signal.SIGINT, self.keyboard_interrupt)
-        self.display = Display()
+        self.display = display.screen
         self.display.update_screen(["Booting..."])
         time.sleep(1)
         self.check_for_updates()

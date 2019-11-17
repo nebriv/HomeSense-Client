@@ -59,7 +59,17 @@ class Display:
         if 0 <= brightness <= 100:
             self.disp.contrast(brightness)
 
-    def update_screen(self, message=None):
+    def display_blocker(self, token=None):
+        self.display_token = token
+
+    def remove_blocker(self):
+        self.display_token = None
+
+    def update_screen(self, message=None, token=None):
+        if self.display_token:
+            if token != self.display_token:
+                return "Display is blocked by %s" % self.display_token
+
         if message is None:
             message = []
         if import_success:
@@ -70,7 +80,7 @@ class Display:
             draw.rectangle((0, 0, width, height), outline=0, fill=0)
             # Draw some shapes.
             # First define some constants to allow easy resizing of shapes.
-            padding = 2
+            padding = 1
             shape_width = 20
             top = padding
             bottom = height - padding
@@ -110,3 +120,5 @@ class Display:
         else:
             logger.error("Import failed. Missing modules.")
             pass
+
+screen = Display()
