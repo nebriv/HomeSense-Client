@@ -39,7 +39,7 @@ class UI:
                 break
 
     def reset_wifi(self):
-        self.display.update_screen(["Reset Wifi?", "Press to continue..."], "Button Interface")
+        self.display.update_screen(["Reset Wifi?", "Press and hold to continue..."], "Button Interface")
         counter = 0
         while True:
             time.sleep(1)
@@ -52,7 +52,7 @@ class UI:
 
 
     def reset_device(self):
-        self.display.update_screen(["Reset Device?", "Press to continue..."], "Button Interface")
+        self.display.update_screen(["Reset Device?", "Press and hold to continue..."], "Button Interface")
         counter = 0
         while True:
             time.sleep(1)
