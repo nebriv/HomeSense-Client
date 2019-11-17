@@ -17,6 +17,7 @@ class UI:
     def wait_for_press(self):
         print("In loop")
         while True:
+
             #self.display.update_screen(["Waiting for button press"])
             while GPIO.input(17) == 1:
                 self.display.display_blocker("Button Interface")
@@ -56,7 +57,6 @@ class UI:
                 break
             if counter > 10:
                 self.display.update_screen(["Reset Wifi timed out."], "Button Interface")
-                time.sleep(2)
                 self.display.remove_blocker()
                 self.display.clear()
                 break
@@ -75,7 +75,6 @@ class UI:
                 break
             if counter > 10:
                 self.display.update_screen(["Reset Device timed out."], "Button Interface")
-                time.sleep(2)
                 self.display.remove_blocker()
                 self.display.clear()
                 break
@@ -87,6 +86,5 @@ if __name__ == "__main__":
         bm.wait_for_press()
     except KeyboardInterrupt:
         halt = True
-        exit()
 
 

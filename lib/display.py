@@ -12,7 +12,7 @@ except ImportError:
     import_success = False
 import logging
 from textwrap import wrap
-import signal
+
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
 
@@ -33,9 +33,7 @@ class Display:
     on = True
     display_token = None
     def __init__(self):
-
-        signal.signal(signal.SIGINT, self.onexit)
-
+        
         if import_success:
             serial = i2c(port=1, address=0x3C)
             self.disp = ssd1306(serial, rotate=0, height=32, width=128)
@@ -43,10 +41,6 @@ class Display:
             self.disp.clear()
         else:
             logger.warning("No display modules found, running in dummy mode")
-
-    def onexit(self, signal, frame):
-        self.clear()
-        exit()
 
     def clear(self):
         if import_success:
