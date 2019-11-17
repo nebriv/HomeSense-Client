@@ -493,9 +493,13 @@ class Monitor(Daemon):
             self.save_sensor()
         else:
             self.display.update_screen(["Connect to wifi:", "HomeSense Setup"])
-            manage_raspiwifi.reset_to_host_mode()
-            time.sleep(1)
-            manage_raspiwifi.reset_to_client_mode()
+            command = "sudo python3 lib/manage_raspiwifi.py --host"
+            subprocess.run(command.split(" "), stdout=subprocess.PIPE).stdout.decode("utf-8")
+            #manage_raspiwifi.reset_to_host_mode()
+            #time.sleep(1)
+            #command = "sudo python3 lib/manage_raspiwifi.py --client"
+            #subprocess.run(command.split(" "), stdout=subprocess.PIPE).stdout.decode("utf-8")
+            #manage_raspiwifi.reset_to_client_mode()
             self.first_time_setup()
 
     def load_config(self):
