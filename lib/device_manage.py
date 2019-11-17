@@ -28,9 +28,12 @@ def reset_to_host_mode():
         run_command("systemctl stop dnsmasq")
         run_command("systemctl stop dhcpcd")
         run_command("systemctl stop wpa_supplicant")
+        run_command("dhclient -r wlan0")
+
         print("Killing running processes")
         run_command("killall wpa_supplicant")
         run_command("killall hostapd")
+
 
         print("Bringing wlan0 down")
         run_command("ifconfig wlan0 down")
@@ -122,7 +125,7 @@ if __name__ == "__main__":
     from lib.RaspiWifi.libs.configuration_app import app
     from lib import display
     from lib import conn_test
-    
+
     parser = argparse.ArgumentParser()
     parser.add_argument("--host", action='store_true')
     parser.add_argument("--client", action='store_true')
