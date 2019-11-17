@@ -40,3 +40,12 @@ class UI:
         self.display.update_screen("Reseting Device")
 
 
+if __name__ == "__main__":
+    halt = False
+    try:
+        bm = UI(halt)
+        bm.wait_for_press()
+    except KeyboardInterrupt:
+        halt = True
+
+
