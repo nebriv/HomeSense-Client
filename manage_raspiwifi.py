@@ -44,7 +44,7 @@ def reset_to_host_mode():
         p.start()
 
         while True:
-            if os.path.isfile('/etc/wpa_supplicant/wpa_supplicant.conf.tmp'):
+            if os.path.isfile('/etc/wpa_supplicant/wpa_supplicant.conf.tmp') or os.path.isfile('/etc/wpa_supplicant/wpa_supplicant.conf'):
                 time.sleep(4)
                 p.terminate()
                 break
