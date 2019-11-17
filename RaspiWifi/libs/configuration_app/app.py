@@ -72,6 +72,7 @@ def scan_wifi_networks(retry=3):
     if len(ap_array) == 0 and retry > 0:
         print("No networks found")
         retry = retry - 1
+        time.sleep(.5)
         scan_wifi_networks(retry)
 
     return ap_array
