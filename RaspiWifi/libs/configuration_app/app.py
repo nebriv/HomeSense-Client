@@ -39,6 +39,8 @@ def save_credentials():
     def sleep_and_start_ap():
         time.sleep(5)
         set_ap_client_mode()
+        func = request.environ.get('werkzeug.server.shutdown')
+        func()
         exit()
     t = Thread(target=sleep_and_start_ap)
     t.start()
