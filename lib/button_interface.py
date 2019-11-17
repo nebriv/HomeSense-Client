@@ -15,8 +15,8 @@ class UI:
         self.halt = halt
 
     def wait_for_press(self):
+        print("In loop")
         while True:
-            print("In loop")
             #self.display.update_screen(["Waiting for button press"])
             while GPIO.input(17) == 1:
                 self.display.display_blocker("Button Interface")
