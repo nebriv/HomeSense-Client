@@ -12,9 +12,6 @@ def reset_to_host_mode():
         print("Cleaning up config files")
         run_command('rm -f /etc/wpa_supplicant/wpa_supplicant.conf')
         run_command('rm -f /home/pi/Projects/RaspiWifi/tmp/*')
-        run_command('rm /etc/cron.raspiwifi/apclient_bootstrapper')
-        run_command('cp /usr/lib/raspiwifi/reset_device/static_files/aphost_bootstrapper /etc/cron.raspiwifi/')
-        run_command('chmod +x /etc/cron.raspiwifi/aphost_bootstrapper')
         run_command('mv /etc/dhcpcd.conf /etc/dhcpcd.conf.original')
         run_command('cp /usr/lib/raspiwifi/reset_device/static_files/dhcpcd.conf /etc/')
         run_command('mv /etc/dnsmasq.conf /etc/dnsmasq.conf.original')
@@ -99,6 +96,9 @@ def reset_to_client_mode(retry=3):
         else:
             return False
 
+def reset_device():
+    run_command("rm /home/pi/HomeSense/sensor.dat")
+    run_command("reboot")
 
 if __name__ == "__main__":
     import argparse

@@ -33,7 +33,7 @@ class Display:
     on = True
     display_token = None
     def __init__(self):
-        
+
         if import_success:
             serial = i2c(port=1, address=0x3C)
             self.disp = ssd1306(serial, rotate=0, height=32, width=128)
