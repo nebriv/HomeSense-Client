@@ -129,6 +129,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--host", action='store_true')
     parser.add_argument("--client", action='store_true')
+    parser.add_argument("--device", action='store_true')
 
     args = parser.parse_args()
     if args.host and args.client:
@@ -140,6 +141,9 @@ if __name__ == "__main__":
     elif args.client:
         print("Running in Client Mode")
         reset_to_client_mode()
+    elif args.device:
+        print("Reseting device")
+        reset_device()
     else:
         print("No arguments.")
         exit()

@@ -2,7 +2,10 @@ import RPi.GPIO as GPIO
 import time
 from . import display
 from . import device_manage
+import subprocess
+import logging
 
+logger = logging.getLogger(__name__)
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(17, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 
@@ -55,9 +58,12 @@ class UI:
                 time.sleep(2)
                 self.display.remove_blocker()
                 self.display.clear()
-                device_manage.reset_to_host_mode()
-                #time.sleep(5)
-
+                command = "sudo python3 -m lib.device_manage --host"
+                p = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
+                while True:
+                    line = p.stdout.readline().decode("utf-8")
+                    logger.debug(line)
+                    if not line: break
                 break
             if counter > 10:
                 self.display.update_screen(["Reset Wifi timed out."], "Button Interface")
@@ -76,7 +82,12 @@ class UI:
                 time.sleep(2)
                 self.display.remove_blocker()
                 self.display.clear()
-                device_manage.reset_device()
+                command = "sudo python3 -m lib.device_manage --device"
+                p = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
+                while True:
+                    line = p.stdout.readline().decode("utf-8")
+                    logger.debug(line)
+                    if not line: break
                 break
             if counter > 10:
                 self.display.update_screen(["Reset Device timed out."], "Button Interface")

@@ -1,6 +1,12 @@
+import logging
+
+logger = logging.getLogger(__name__)
+
+
 def test_network_connection():
     import socket
     REMOTE_SERVER = "www.google.com"
+    logger.debug("Checking network connection")
 
     try:
         # see if we can resolve the host name -- tells us if there is
