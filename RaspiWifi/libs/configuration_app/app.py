@@ -6,7 +6,7 @@ from threading import Thread
 import fileinput
 
 app = Flask(__name__)
-app.debug = True
+app.debug = False
 
 
 @app.route('/')
@@ -37,8 +37,9 @@ def save_credentials():
     # Call set_ap_client_mode() in a thread otherwise the reboot will prevent
     # the response from getting to the browser
     def sleep_and_start_ap():
-        time.sleep(2)
+        time.sleep(5)
         set_ap_client_mode()
+        exit()
     t = Thread(target=sleep_and_start_ap)
     t.start()
 
@@ -58,7 +59,7 @@ def save_wpa_credentials():
 
     def sleep_and_reboot_for_wpa():
         time.sleep(2)
-        os.system('reboot')
+        #os.system('reboot')
 
     t = Thread(target=sleep_and_reboot_for_wpa)
     t.start()
@@ -116,7 +117,7 @@ def set_ap_client_mode():
     os.system('chmod +x /etc/cron.raspiwifi/apclient_bootstrapper')
     os.system('mv /etc/dnsmasq.conf.original /etc/dnsmasq.conf')
     os.system('mv /etc/dhcpcd.conf.original /etc/dhcpcd.conf')
-    os.system('reboot')
+    #os.system('reboot')
 
 def update_wpa(wpa_enabled, wpa_key):
     with fileinput.FileInput('/etc/raspiwifi/raspiwifi.conf', inplace=True) as raspiwifi_conf:
