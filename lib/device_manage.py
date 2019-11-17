@@ -2,11 +2,13 @@ import os
 import fileinput
 import subprocess
 import time
-from .RaspiWifi.libs.configuration_app import app
+if __name__ != "__main__":
+    from .RaspiWifi.libs.configuration_app import app
+    from . import conn_test
+    from . import display
 import multiprocessing, signal
 import socket
-from . import conn_test
-from . import display
+
 
 def reset_to_host_mode():
     if not os.path.isfile('/etc/raspiwifi/host_mode'):
@@ -117,7 +119,10 @@ def reset_device():
 
 if __name__ == "__main__":
     import argparse
-
+    from lib.RaspiWifi.libs.configuration_app import app
+    from lib import display
+    from lib import conn_test
+    
     parser = argparse.ArgumentParser()
     parser.add_argument("--host", action='store_true')
     parser.add_argument("--client", action='store_true')
