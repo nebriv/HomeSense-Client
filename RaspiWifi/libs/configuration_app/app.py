@@ -22,6 +22,8 @@ def page_not_found(e):
 @app.route('/setup')
 def setup():
     wifi_ap_array = scan_wifi_networks()
+    while len(wifi_ap_array) < 1:
+        wifi_ap_array = scan_wifi_networks()
     config_hash = config_file_hash()
 
     return render_template('app.html', wifi_ap_array = wifi_ap_array, config_hash = config_hash)
