@@ -14,6 +14,11 @@ app.debug = False
 def index():
     return redirect("http://raspiwifisetup.com/setup", code=302)
 
+@app.errorhandler(404)
+def page_not_found(e):
+    # your processing here
+    return redirect("http://raspiwifisetup.com/setup", code=302)
+
 @app.route('/setup')
 def setup():
     wifi_ap_array = scan_wifi_networks()
