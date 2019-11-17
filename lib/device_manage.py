@@ -5,8 +5,8 @@ import time
 from RaspiWifi.libs.configuration_app import app
 import multiprocessing, signal
 import socket
-from lib import conn_test
-from lib import display
+import conn_test
+import display
 
 def reset_to_host_mode():
     if not os.path.isfile('/etc/raspiwifi/host_mode'):
