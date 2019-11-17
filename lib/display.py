@@ -136,8 +136,8 @@ class Display:
         #     # self.disp.image(image)
         #     if self.on:
         #         self.disp.display(image)
-        else:
-            logger.error("Import failed. Missing modules.")
-            pass
+        # else:
+        #     logger.error("Import failed. Missing modules.")
+        #     pass
 
 screen = Display()
