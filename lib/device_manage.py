@@ -13,7 +13,7 @@ import display
 def reset_to_host_mode():
     if not os.path.isfile('/etc/raspiwifi/host_mode'):
         display.screen.display_blocker("Wifi Host")
-        display.screen.update_screen(["Starting WiFi..."], "Wifi Host")
+        display.screen.update_screen(["Starting WiFi Hotspot..."], "Wifi Host")
         print("Cleaning up config files")
         run_command('rm -f /etc/wpa_supplicant/wpa_supplicant.conf')
         run_command('rm -f /home/pi/Projects/RaspiWifi/tmp/*')
