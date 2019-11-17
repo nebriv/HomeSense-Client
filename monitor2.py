@@ -499,8 +499,8 @@ class Monitor(Daemon):
             command = "sudo python3 -m lib.device_manage --host"
             p = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
             while True:
-                line = p.stdout.readline()
-                print(line)
+                line = p.stdout.readline().decode("utf-8")
+                logger.debug(line)
                 if not line: break
 
             #subprocess.run(command.split(" "), stdout=subprocess.PIPE).stdout.decode("utf-8")
