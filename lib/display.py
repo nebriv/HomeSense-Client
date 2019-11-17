@@ -36,7 +36,7 @@ class Display:
         if import_success:
             serial = i2c(port=1, address=0x3C)
             self.disp = ssd1306(serial, rotate=0, height=32, width=128)
-            self.disp.cleanup = do_nothing()
+            self.disp.cleanup = do_nothing
             self.disp.clear()
         else:
             logger.warning("No display modules found, running in dummy mode")
