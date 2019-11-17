@@ -16,10 +16,12 @@ class UI:
 
     def wait_for_press(self):
         while True:
-            self.display.display_blocker("Button Interface")
-            self.display.update_screen(["Waiting for button press"], "Button Interface")
+
+            self.display.update_screen(["Waiting for button press"])
             while GPIO.input(17) == 1:
+                self.display.display_blocker("Button Interface")
                 self.display.update_screen(["5 = Wifi", "15 = Device", "%s" % self.counter], "Button Interface")
+                self.display.update_screen(["Test"])
                 time.sleep(1)
                 self.counter += 1
                 if self.halt:

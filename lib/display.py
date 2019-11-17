@@ -68,6 +68,7 @@ class Display:
     def update_screen(self, message=None, token=None):
         if self.display_token:
             if token != self.display_token:
+                print("Display is blocked by %s" % self.display_token)
                 return "Display is blocked by %s" % self.display_token
 
         if message is None:
@@ -109,6 +110,7 @@ class Display:
             for line in message:
                 formatted_lines += wrap(line, 20)
                 # print(formatted_lines)
+            print(formatted_lines)
 
             for line in formatted_lines:
                 draw.text((x, top + line_break), line, font=font, fill=200)
