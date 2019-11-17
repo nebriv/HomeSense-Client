@@ -29,7 +29,7 @@ logger.addHandler(fh)
 class Display:
     RST = 24
     on = True
-
+    display_token = None
     def __init__(self):
         if import_success:
             serial = i2c(port=1, address=0x3C)
