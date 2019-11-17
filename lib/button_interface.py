@@ -18,13 +18,9 @@ class UI:
         while True:
             self.display.update_screen(["Waiting for button press"])
             while GPIO.input(17) == 1:
-                self.display.update_screen(["5 = Wifi", "15 = Device"])
+                self.display.update_screen(["5 = Wifi", "15 = Device", "%s" % self.counter])
                 time.sleep(1)
                 self.counter += 1
-                if reset_device > self.counter > reset_wifi:
-                    self.display.update_screen(["Reset WiFi Connection?"])
-                elif self.counter > reset_device:
-                    self.display.update_screen(["Reset HomeSense Sensor?"])
                 if self.halt:
                     break
             if reset_device > self.counter > reset_wifi:
