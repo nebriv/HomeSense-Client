@@ -56,6 +56,7 @@ class UI:
                 break
             if counter > 10:
                 self.display.update_screen(["Reset Wifi timed out."], "Button Interface")
+                time.sleep(2)
                 self.display.remove_blocker()
                 self.display.clear()
                 break
@@ -74,6 +75,7 @@ class UI:
                 break
             if counter > 10:
                 self.display.update_screen(["Reset Device timed out."], "Button Interface")
+                time.sleep(2)
                 self.display.remove_blocker()
                 self.display.clear()
                 break
