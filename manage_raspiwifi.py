@@ -3,6 +3,7 @@ import fileinput
 import subprocess
 import time
 from RaspiWifi.libs.configuration_app import app
+import multiprocessing, signal
 
 def reset_to_host_mode():
     if not os.path.isfile('/etc/raspiwifi/host_mode'):
@@ -37,7 +38,17 @@ def reset_to_host_mode():
         os.system("systemctl start dhcpcd")
         os.system("touch /etc/raspiwifi/host_mode")
         print("Running raspiwifi app")
-        app.app.run(host='0.0.0.0', port=80)
+
+        app_args = {"host": "0.0.0.0", "port":80}
+        p = multiprocessing.Process(target=app.app.run, kwargs=app_args)
+        p.start()
+
+        while True:
+            if os.path.isfile('/etc/wpa_supplicant/wpa_supplicant.conf.tmp'):
+                time.sleep(4)
+                p.terminate()
+                break
+        #app.app.run(host='0.0.0.0', port=80)
         print("Why?")
     else:
         print("AP mode already running")
