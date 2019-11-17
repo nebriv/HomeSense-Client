@@ -49,7 +49,7 @@ def reset_to_host_mode():
                 p.terminate()
                 break
         #app.app.run(host='0.0.0.0', port=80)
-        print("Why?")
+        reset_to_client_mode()
     else:
         print("AP mode already running")
 
@@ -67,7 +67,7 @@ def test_network_connection():
         return True
     return False
 
-def reset_to_client_mode():
+def reset_to_client_mode(retry=3):
     print("Removing host mode flag")
     run_command("rm /etc/raspiwifi/host_mode")
 
@@ -95,9 +95,14 @@ def reset_to_client_mode():
     print("Testing network connection")
     if test_network_connection():
         print("We're connected")
+        return True
     else:
         print("uhhh trying again?")
-        reset_to_client_mode()
+        if retry > 0:
+            retry = retry -1
+            reset_to_client_mode(retry)
+        else:
+            return False
 
 
 if __name__ == "__main__":

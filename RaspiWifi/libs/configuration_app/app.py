@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect
 import subprocess
 import os
 import time
@@ -12,11 +12,14 @@ app.debug = False
 
 @app.route('/')
 def index():
+    return redirect("http://raspiwifisetup.com/setup", code=302)
+
+@app.route('/setup')
+def setup():
     wifi_ap_array = scan_wifi_networks()
     config_hash = config_file_hash()
 
     return render_template('app.html', wifi_ap_array = wifi_ap_array, config_hash = config_hash)
-
 
 @app.route('/manual_ssid_entry')
 def manual_ssid_entry():
@@ -34,15 +37,6 @@ def save_credentials():
     wifi_key = request.form['wifi_key']
 
     create_wpa_supplicant(ssid, wifi_key)
-    
-    # Call set_ap_client_mode() in a thread otherwise the reboot will prevent
-    # the response from getting to the browser
-    def sleep_and_start_ap():
-        time.sleep(5)
-        set_ap_client_mode()
-
-    t = Thread(target=sleep_and_start_ap)
-    t.start()
 
     return render_template('save_credentials.html', ssid = ssid)
 
@@ -58,18 +52,8 @@ def save_wpa_credentials():
     else:
         update_wpa(0, wpa_key)
 
-    def sleep_and_reboot_for_wpa():
-        time.sleep(5)
-        exit()
-        #os.system('reboot')
-
-    t = Thread(target=sleep_and_reboot_for_wpa)
-    t.start()
-
     config_hash = config_file_hash()
     return render_template('save_wpa_credentials.html', wpa_enabled = config_hash['wpa_enabled'], wpa_key = config_hash['wpa_key'])
-
-
 
 
 ######## FUNCTIONS ##########
