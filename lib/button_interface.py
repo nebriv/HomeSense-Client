@@ -20,7 +20,7 @@ class UI:
             self.display.update_screen(["Waiting for button press"])
             while GPIO.input(17) == 1:
                 self.display.display_blocker("Button Interface")
-                self.display.update_screen(["5 = Wifi", "15 = Device", "%s" % self.counter], "Button Interface")
+                self.display.update_screen(["5 = Wifi", "15 = Device", "%s seconds" % self.counter], "Button Interface")
                 self.display.update_screen(["Test"])
                 time.sleep(1)
                 self.counter += 1
@@ -39,14 +39,29 @@ class UI:
                 break
 
     def reset_wifi(self):
-        self.display.update_screen(["Reseting Wifi"], "Button Interface")
-        time.sleep(5)
+        self.display.update_screen(["Reset Wifi?", "Press to continue..."], "Button Interface")
+        counter = 0
+        while True:
+            time.sleep(1)
+            if GPIO.input(17) == 1:
+                self.display.update_screen(["Reseting Wifi"], "Button Interface")
+                time.sleep(5)
+            if counter > 10:
+                self.display.update_screen(["Reset Wifi timed out."], "Button Interface")
+                break
+
 
     def reset_device(self):
-        self.display.update_screen(["Reseting Device"], "Button Interface")
-        time.sleep(5)
-        self.display.clear()
-
+        self.display.update_screen(["Reset Device?", "Press to continue..."], "Button Interface")
+        counter = 0
+        while True:
+            time.sleep(1)
+            if GPIO.input(17) == 1:
+                self.display.update_screen(["Reseting Device"], "Button Interface")
+                time.sleep(5)
+            if counter > 10:
+                self.display.update_screen(["Reset Device timed out."], "Button Interface")
+                break
 
 if __name__ == "__main__":
     halt = False

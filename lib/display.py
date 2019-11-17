@@ -82,9 +82,9 @@ class Display:
             formatted_lines += wrap(line, 20)
             # print(formatted_lines)
         with canvas(self.disp) as draw:
-            draw.rectangle(self.disp.bounding_box, outline="white", fill="black")
-            y = 0
-            x = 3
+            #draw.rectangle(self.disp.bounding_box, outline="white", fill="black")
+            y = 1
+            x = 1
             for line in formatted_lines:
                 draw.text((x,y), line, fill="white")
                 y += 10
