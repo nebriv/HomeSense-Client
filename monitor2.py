@@ -493,7 +493,7 @@ class Monitor(Daemon):
             self.save_sensor()
         else:
             #self.display.update_screen(["Connect to wifi:", "HomeSense Setup"])
-            command = "sudo python3 lib/device_manage.py --host"
+            command = "sudo python3 -m lib/device_manage --host"
             subprocess.run(command.split(" "), stdout=subprocess.PIPE).stdout.decode("utf-8")
             #manage_raspiwifi.reset_to_host_mode()
             #time.sleep(1)
