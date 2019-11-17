@@ -20,6 +20,9 @@ import requests
 
 from lib.daemon import Daemon
 from lib.display import Display
+from lib import manage_raspiwifi
+from lib import conn_test
+from lib import button_interface
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
@@ -162,6 +165,14 @@ class Monitor(Daemon):
         thread1.start()
         self.threads.append(thread1)
         return True
+
+    def start_button_monitor(self):
+        bm = button_interface.UI(self.thread_halt)
+
+        thread1 = Thread(target=bm.wait_for_press)
+        thread1.daemon = True
+        thread1.start()
+        self.threads.append(thread1)
 
     def add_scheduled_task(self, function, time, **args):
         logger.debug("Adding task: %s" % str(function.__name__))
@@ -475,10 +486,17 @@ class Monitor(Daemon):
 
     def first_time_setup(self):
         logger.info("Running first time setup...")
-        self.generate_device_id()
-        self.get_sensors()
-        self.register()
-        self.save_sensor()
+        if conn_test.test_network_connection():
+            self.generate_device_id()
+            self.get_sensors()
+            self.register()
+            self.save_sensor()
+        else:
+            self.display.update_screen(["Connect to wifi:", "HomeSense Setup"])
+            manage_raspiwifi.reset_to_host_mode()
+            time.sleep(1)
+            manage_raspiwifi.reset_to_client_mode()
+            self.first_time_setup()
 
     def load_config(self):
         self.config = ConfigParser()
@@ -540,6 +558,7 @@ class Monitor(Daemon):
 
     def run(self):
         #self.start_device_clock()
+        self.start_button_monitor()
         self.scheduler = sched.scheduler(time.monotonic, self.sched_sleeper)
         logger.debug("Starting Run Statement")
         signal.signal(signal.SIGINT, self.keyboard_interrupt)

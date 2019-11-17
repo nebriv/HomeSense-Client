@@ -4,39 +4,41 @@ import subprocess
 import time
 from RaspiWifi.libs.configuration_app import app
 import multiprocessing, signal
+import socket
+from lib import conn_test
 
 def reset_to_host_mode():
     if not os.path.isfile('/etc/raspiwifi/host_mode'):
         print("Cleaning up config files")
-        os.system('rm -f /etc/wpa_supplicant/wpa_supplicant.conf')
-        os.system('rm -f /home/pi/Projects/RaspiWifi/tmp/*')
-        os.system('rm /etc/cron.raspiwifi/apclient_bootstrapper')
-        os.system('cp /usr/lib/raspiwifi/reset_device/static_files/aphost_bootstrapper /etc/cron.raspiwifi/')
-        os.system('chmod +x /etc/cron.raspiwifi/aphost_bootstrapper')
-        os.system('mv /etc/dhcpcd.conf /etc/dhcpcd.conf.original')
-        os.system('cp /usr/lib/raspiwifi/reset_device/static_files/dhcpcd.conf /etc/')
-        os.system('mv /etc/dnsmasq.conf /etc/dnsmasq.conf.original')
-        os.system('cp /usr/lib/raspiwifi/reset_device/static_files/dnsmasq.conf /etc/')
-        os.system('cp /usr/lib/raspiwifi/reset_device/static_files/dhcpcd.conf /etc/')
-        os.system('touch /etc/raspiwifi/host_mode')
+        run_command('rm -f /etc/wpa_supplicant/wpa_supplicant.conf')
+        run_command('rm -f /home/pi/Projects/RaspiWifi/tmp/*')
+        run_command('rm /etc/cron.raspiwifi/apclient_bootstrapper')
+        run_command('cp /usr/lib/raspiwifi/reset_device/static_files/aphost_bootstrapper /etc/cron.raspiwifi/')
+        run_command('chmod +x /etc/cron.raspiwifi/aphost_bootstrapper')
+        run_command('mv /etc/dhcpcd.conf /etc/dhcpcd.conf.original')
+        run_command('cp /usr/lib/raspiwifi/reset_device/static_files/dhcpcd.conf /etc/')
+        run_command('mv /etc/dnsmasq.conf /etc/dnsmasq.conf.original')
+        run_command('cp /usr/lib/raspiwifi/reset_device/static_files/dnsmasq.conf /etc/')
+        run_command('cp /usr/lib/raspiwifi/reset_device/static_files/dhcpcd.conf /etc/')
+        run_command('touch /etc/raspiwifi/host_mode')
 
         print("Stopping services")
-        os.system("systemctl stop dnsmasq")
-        os.system("systemctl stop dhcpcd")
-        os.system("systemctl stop wpa_supplicant")
+        run_command("systemctl stop dnsmasq")
+        run_command("systemctl stop dhcpcd")
+        run_command("systemctl stop wpa_supplicant")
         print("Killing running processes")
-        os.system("killall wpa_supplicant")
-        os.system("killall hostapd")
+        run_command("killall wpa_supplicant")
+        run_command("killall hostapd")
 
         print("Bringing wlan0 down")
-        os.system("ifconfig wlan0 down")
+        run_command("ifconfig wlan0 down")
         time.sleep(1)
         print("Starting hostapd")
-        os.system("hostapd -d /etc/hostapd/hostapd.conf -B")
+        run_command("hostapd -d /etc/hostapd/hostapd.conf -B")
         print("Starting dnsmasq and dhcpcd")
-        os.system("systemctl start dnsmasq")
-        os.system("systemctl start dhcpcd")
-        os.system("touch /etc/raspiwifi/host_mode")
+        run_command("systemctl start dnsmasq")
+        run_command("systemctl start dhcpcd")
+        run_command("touch /etc/raspiwifi/host_mode")
         print("Running raspiwifi app")
 
         app_args = {"host": "0.0.0.0", "port":80}
@@ -59,13 +61,6 @@ def run_command(command):
     result = subprocess.run(command.split(" "), stdout=subprocess.PIPE).stdout.decode("utf-8")
     result = str(result)
     return result
-
-def test_network_connection():
-    r = run_command("ping 8.8.8.8 -c 3")
-    print(r)
-    if "bytes from 8.8.8.8" in r:
-        return True
-    return False
 
 def reset_to_client_mode(retry=3):
     print("Removing host mode flag")
@@ -93,7 +88,7 @@ def reset_to_client_mode(retry=3):
     print("Starting dhclient")
     run_command("dhclient wlan0")
     print("Testing network connection")
-    if test_network_connection():
+    if conn_test.test_network_connection():
         print("We're connected")
         return True
     else:
