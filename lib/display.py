@@ -94,7 +94,7 @@ class Display:
                         draw.text((x,y), line, fill="white")
                         y += 10
         except Exception as err:
-            logger.error("Error while trying to update screen: %s" err)
+            logger.error("Error while trying to update screen: %s" % err)
 
 
 
