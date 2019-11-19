@@ -70,75 +70,33 @@ class Display:
         self.display_token = None
 
     def update_screen(self, message=None, token=None):
-        if self.display_token:
-            if token != self.display_token:
-                print("Display is blocked by %s" % self.display_token)
-                return "Display is blocked by %s" % self.display_token
+        try:
+            if not self.on:
+                self.disp.clear()
+            else:
+                if self.display_token:
+                    if token != self.display_token:
+                        print("Display is blocked by %s" % self.display_token)
+                        return "Display is blocked by %s" % self.display_token
 
-        if message is None:
-            message = []
+                if message is None:
+                    message = []
 
-        formatted_lines = []
-        for line in message:
-            formatted_lines += wrap(line, 20)
-            # print(formatted_lines)
-        with canvas(self.disp) as draw:
-            #draw.rectangle(self.disp.bounding_box, outline="white", fill="black")
-            y = 1
-            x = 1
-            for line in formatted_lines:
-                draw.text((x,y), line, fill="white")
-                y += 10
+                formatted_lines = []
+                for line in message:
+                    formatted_lines += wrap(line, 20)
+                    # print(formatted_lines)
+                with canvas(self.disp) as draw:
+                    #draw.rectangle(self.disp.bounding_box, outline="white", fill="black")
+                    y = 1
+                    x = 1
+                    for line in formatted_lines:
+                        draw.text((x,y), line, fill="white")
+                        y += 10
+        except Exception as err:
+            logger.error("Error while trying to update screen: %s" err)
 
 
-        # if import_success:
-        #     width = self.disp.width
-        #     height = self.disp.height
-        #     image = Image.new('1', (width, height))
-        #     draw = ImageDraw.Draw(image)
-        #     draw.rectangle((0, 0, width, height), outline=0, fill=0)
-        #     # Draw some shapes.
-        #     # First define some constants to allow easy resizing of shapes.
-        #     padding = 1
-        #     shape_width = 20
-        #     top = padding
-        #     bottom = height - padding
-        #     # Move left to right keeping track of the current x position for drawing shapes.
-        #     x = padding
-        #     # Draw an ellipse.
-        #     # draw.ellipse((x, top , x+shape_width, bottom), outline=255, fill=0)
-        #     # x += shape_width+padding
-        #     # Draw a rectangle.
-        #     # draw.rectangle((x, top, x+shape_width, bottom), outline=255, fill=0)
-        #     # x += shape_width+padding
-        #     # Draw a triangle.
-        #     # draw.polygon([(x, bottom), (x+shape_width/2, top), (x+shape_width, bottom)], outline=255, fill=0)
-        #     # x += shape_width+padding
-        #     # Draw an X.
-        #     # draw.line((x, bottom, x+shape_width, top), fill=255)
-        #     # draw.line((x, top, x+shape_width, bottom), fill=255)
-        #     # x += shape_width+padding
-        #     # Load default font.
-        #     font = ImageFont.load_default()
-        #     # Write two lines of text.
-        #     line_break = 0
-        #     formatted_lines = []
-        #     # line length
-        #     n = 100
-        #     for line in message:
-        #         formatted_lines += wrap(line, 20)
-        #         # print(formatted_lines)
-        #     print(formatted_lines)
-        #
-        #     for line in formatted_lines:
-        #         draw.text((x, top + line_break), line, font=font, fill=200)
-        #         line_break = 5
-        #     # Display image.
-        #     # self.disp.image(image)
-        #     if self.on:
-        #         self.disp.display(image)
-        # else:
-        #     logger.error("Import failed. Missing modules.")
-        #     pass
+
 
 screen = Display()
