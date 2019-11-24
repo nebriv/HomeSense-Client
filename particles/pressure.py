@@ -5,10 +5,19 @@
 # https://www.controleverything.com/products
 
 import time
-
 import smbus
 
 from sensors.base_sensor import Sensor
+import logging
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
+# create the logging file handler
+fh = logging.FileHandler("homesense.log")
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+fh.setFormatter(formatter)
+# add handler to logger object
+logger.addHandler(fh)
+
 
 addr = 0x60
 
@@ -36,8 +45,11 @@ class Particle(Sensor):
         return pressure
 
     def setup(self):
-        self.bus = smbus.SMBus(1)
-        self.sensor_running = True
+        try:
+            self.bus = smbus.SMBus(1)
+            self.sensor_running = True
+        except Exception as err:
+            logger.warning("Error starting %s: %s" % (self.name, err))
 
 if __name__ == "__main__":
     test = Particle()
