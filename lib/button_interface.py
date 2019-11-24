@@ -19,7 +19,6 @@ class UI:
         self.halt = halt
 
     def wait_for_press(self):
-        print("In loop")
         while True:
 
             #self.display.update_screen(["Waiting for button press"])

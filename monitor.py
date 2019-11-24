@@ -39,6 +39,8 @@ logger.addHandler(fh)
 version = "1.0"
 update_url = "https://api.github.com/repos/nebriv/HomeSense-Client/releases/latest"
 
+homesense_location = os.path.dirname(os.path.realpath(__file__))
+os.chdir(homesense_location)
 
 def get_all_subclasses(cls):
     all_subclasses = []
@@ -212,6 +214,7 @@ class Monitor(Daemon):
                     logger.info("Found new version: %s" % release_info['tag_name'])
                     return True
                 else:
+                    logger.debug("No updates found")
                     return False
 
     def keyboard_interrupt(self, signal, frame):
