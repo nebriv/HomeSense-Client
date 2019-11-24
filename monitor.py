@@ -204,18 +204,21 @@ class Monitor(Daemon):
 
         self.display.update_screen(["Checking for updates"])
         logger.info("Checking for sensor updates")
-
-        self.add_scheduled_task(self.check_for_updates, 600)
-        r = requests.get(update_url)
-        if r.ok:
-            release_info = r.json()
-            if "tag_name" in release_info:
-                if LooseVersion(version) < LooseVersion(release_info['tag_name']):
-                    logger.info("Found new version: %s" % release_info['tag_name'])
-                    return True
-                else:
-                    logger.debug("No updates found")
-                    return False
+        try:
+            self.add_scheduled_task(self.check_for_updates, 600)
+            r = requests.get(update_url)
+            if r.ok:
+                release_info = r.json()
+                if "tag_name" in release_info:
+                    if LooseVersion(version) < LooseVersion(release_info['tag_name']):
+                        logger.info("Found new version: %s" % release_info['tag_name'])
+                        return True
+                    else:
+                        logger.debug("No updates found")
+                        return False
+        except Exception as err:
+            logger.error("Error checking for updates: %s" % err)
+            return False
 
     def keyboard_interrupt(self, signal, frame):
         logger.info("Keyboard Interrupt - Shutting Down")
@@ -622,12 +625,14 @@ class Monitor(Daemon):
         self.display.update_screen(["Booting..."])
         self.start_button_monitor()
         time.sleep(1)
-        self.check_for_updates()
+
         self.load_config()
         self.loaded_particle_modules = load_all_modules_from_dir("particles")
         if self.first_start():
             self.first_time_setup()
+            self.check_for_updates()
         else:
+            self.check_for_updates()
             try:
                 self.load_sensor()
                 if self.get_sensors():

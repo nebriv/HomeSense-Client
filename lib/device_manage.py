@@ -141,6 +141,7 @@ def reset_device():
     display.screen.update_screen(["Resetting Device..."], "Device Reset")
     run_command("rm /home/pi/HomeSense/sensor.dat")
     setup()
+    print("Rebooting")
     run_command("reboot")
 
 if __name__ == "__main__":
