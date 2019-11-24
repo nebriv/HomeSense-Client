@@ -42,7 +42,7 @@ def copy_new_confgs():
     run_command('sudo systemctl daemon-reload')
     run_command('sudo rm -rf /etc/raspiwifi')
     run_command('sudo mkdir /etc/raspiwifi')
-    run_command('sudo cp %s/config_files/raspiwifi.conf /etc/raspiwifi/')
+    run_command('sudo cp %s/config_files/raspiwifi.conf /etc/raspiwifi/' % script_dir)
 
 def reset_to_host_mode():
     if not os.path.isfile('/etc/raspiwifi/host_mode'):
