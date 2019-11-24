@@ -204,20 +204,25 @@ class Monitor(Daemon):
 
         self.display.update_screen(["Checking for updates"])
         logger.info("Checking for sensor updates")
-        try:
-            self.add_scheduled_task(self.check_for_updates, 600)
-            r = requests.get(update_url)
-            if r.ok:
-                release_info = r.json()
-                if "tag_name" in release_info:
-                    if LooseVersion(version) < LooseVersion(release_info['tag_name']):
-                        logger.info("Found new version: %s" % release_info['tag_name'])
-                        return True
-                    else:
-                        logger.debug("No updates found")
-                        return False
-        except Exception as err:
-            logger.error("Error checking for updates: %s" % err)
+        if conn_test.test_network_connection():
+            try:
+                self.add_scheduled_task(self.check_for_updates, 600)
+                r = requests.get(update_url)
+                if r.ok:
+                    release_info = r.json()
+                    if "tag_name" in release_info:
+                        if LooseVersion(version) < LooseVersion(release_info['tag_name']):
+                            logger.info("Found new version: %s" % release_info['tag_name'])
+                            return True
+                        else:
+                            logger.debug("No updates found")
+                            return False
+            except Exception as err:
+                logger.error("Error checking for updates: %s" % err)
+                return False
+        else:
+            logger.warning("Device not online, unable to check for updates.")
+            self.display.update_screen(["Device not online, unable to check for updates."])
             return False
 
     def keyboard_interrupt(self, signal, frame):

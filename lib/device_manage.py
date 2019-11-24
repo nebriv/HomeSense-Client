@@ -139,7 +139,7 @@ def reset_to_client_mode(retry=3):
 def reset_device():
     display.screen.display_blocker("Device Reset")
     display.screen.update_screen(["Resetting Device..."], "Device Reset")
-    run_command("rm /home/pi/HomeSense/sensor.dat")
+    run_command("rm /home/pi/HomeSense-Client/sensor.dat")
     setup()
     print("Rebooting")
     run_command("reboot")
