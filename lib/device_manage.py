@@ -12,8 +12,11 @@ import socket
 script_dir = os.path.dirname(os.path.realpath(__file__))
 
 def setup():
+    print("Removing configs")
     remove_confgs()
+    print("Copying configs")
     copy_new_confgs()
+    run_command("sudo systemctl enable homesense.service")
 
 def backup_confgs():
     run_command('sudo cp /etc/dhcpcd.conf /etc/dhcpcd.conf.original')
@@ -30,8 +33,10 @@ def remove_confgs():
     run_command('sudo mv /etc/systemd/system/homesense.service /etc/systemd/system/homesense.service.original')
 
 def copy_new_confgs():
-    run_command('sudo cp %s/config_files/dhcpcd.conf /etc/dhcpcd.conf' % script_dir)
+    #run_command('sudo cp %s/config_files/dhcpcd.conf.host_mode /etc/dhcpcd.conf' % script_dir)
     run_command('sudo cp %s/config_files/dnsmasq.conf /etc/dnsmasq.conf' % script_dir)
+
+    run_command('sudo mkdir /etc/hostapd/')
     run_command('sudo cp %s/config_files/hostapd.conf /etc/hostapd/hostapd.conf' % script_dir)
     run_command('sudo cp %s/config_files/homesense.service /etc/systemd/system/homesense.service' % script_dir)
     run_command('sudo systemctl daemon-reload')
@@ -45,6 +50,8 @@ def reset_to_host_mode():
         print("Cleaning up config files")
         run_command('mv /etc/wpa_supplicant/wpa_supplicant.conf /etc/wpa_supplicant/wpa_supplicant.conf.orginal')
         run_command('touch /etc/raspiwifi/host_mode')
+
+        run_command('sudo cp %s/config_files/dhcpcd.conf.host_mode /etc/dhcpcd.conf' % script_dir)
 
         print("Stopping services")
         run_command("systemctl stop dnsmasq")
