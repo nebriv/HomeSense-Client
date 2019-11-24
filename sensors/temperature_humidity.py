@@ -49,6 +49,7 @@ class HTU21DF():
             if self.stop:
                 print("Stopping HTU21DF")
                 break
+
             handle = self.pi.i2c_open(self.bus, self.addr)  # open i2c bus
             self.pi.i2c_write_byte(handle, self.rdtemp)  # send read temp command
             time.sleep(.5)  # readings take up to 50ms, lets give it some time
@@ -97,7 +98,7 @@ class HTU21DF():
             thread1.daemon = True
             thread1.start()
             self.sensor_running = True
-            time.sleep(5)
+            time.sleep(3)
             print("Sensor Started")
 
     def htu_reset(self):

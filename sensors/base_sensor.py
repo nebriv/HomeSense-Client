@@ -7,6 +7,7 @@ class Sensor(object):
     def __init__(self):
         self.name = "Not Implemented"
         self.generate_id()
+        self.sensor_running = False
 
     def setup(self):
         return NotImplemented

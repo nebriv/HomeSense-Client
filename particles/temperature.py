@@ -28,3 +28,6 @@ class Particle(Sensor):
         time.sleep(.1)
         if not temperature_humidity.HTU21DFSensor.sensor_running:
             temperature_humidity.HTU21DFSensor.setup()
+
+        if temperature_humidity.HTU21DFSensor.sensor_running:
+            self.sensor_running = True

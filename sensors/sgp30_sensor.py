@@ -26,18 +26,23 @@ class SGP30():
 
     def setup(self):
         if not self.sensor_running:
-            print("Initializing SGP30 Sensor...")
-            self.bus = smbus2.SMBus(1)
+            try:
+                print("Initializing SGP30 Sensor...")
+                self.bus = smbus2.SMBus(1)
 
-            self.sgp = Sgp30(self.bus)
-            self.sgp.i2c_geral_call()
-            self.sgp.init_sgp()
-            time.sleep(20)
-            self.sensor_running = True
-            self.co2 = self.sgp.read_measurements().data[0]
-            self.tvoc = self.sgp.read_measurements().data[1]
-            time.sleep(2)
-            print("Sensor Started")
+                self.sgp = Sgp30(self.bus)
+                self.sgp.i2c_geral_call()
+                self.sgp.init_sgp()
+                time.sleep(20)
+                self.sensor_running = True
+                self.co2 = self.sgp.read_measurements().data[0]
+                self.tvoc = self.sgp.read_measurements().data[1]
+                time.sleep(2)
+                print("Sensor Started")
+                return True
+            except Exception as err:
+                print(err)
+                return False
 
 SGPsensor = SGP30()
 

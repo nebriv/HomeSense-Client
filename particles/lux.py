@@ -21,3 +21,4 @@ class Particle(Sensor):
     def setup(self):
         self.tsl = TSL2561(debug=1)
         self.tsl.set_auto_range(16)
+        self.sensor_running = True

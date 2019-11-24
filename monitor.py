@@ -520,6 +520,7 @@ class Monitor(Daemon):
             logger.info("Starting %s" % particle.name)
             particle.setup()
 
+
     def first_time_setup(self):
         logger.info("Running first time setup...")
         if conn_test.test_network_connection():
@@ -599,10 +600,13 @@ class Monitor(Daemon):
         while True:
             self.display.update_screen(["Collecting Data..."])
             for particle in self.particles:
-                #print(particle.id, particle.name, particle.get_data())
-                logger.debug("Getting data: %s" % particle.name)
-                data = {"particle_id": particle.id, "device_id": self.device_id, "particle_data": particle.get_data(), "token": self.token}
-                self.upload_homesense_data(data)
+                if particle.sensor_running:
+                    #print(particle.id, particle.name, particle.get_data())
+                    logger.debug("Getting data: %s" % particle.name)
+                    data = {"particle_id": particle.id, "device_id": self.device_id, "particle_data": particle.get_data(), "token": self.token}
+                    self.upload_homesense_data(data)
+                else:
+                    logger.warning("%s not running, unable to collect data" % particle.name)
             self.wait(self.update_frequency)
 
     def run(self):

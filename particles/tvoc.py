@@ -16,6 +16,8 @@ class Particle(Sensor):
     def setup(self):
         time.sleep(.1)
         sgp.setup()
+        if sgp.sensor_running:
+            self.sensor_running = True
 
     def shutdown(self):
         sgp.shutdown()
