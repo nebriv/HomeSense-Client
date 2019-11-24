@@ -52,6 +52,7 @@ def reset_to_host_mode():
         run_command('touch /etc/raspiwifi/host_mode')
 
         run_command('sudo cp %s/config_files/dhcpcd.conf.host_mode /etc/dhcpcd.conf' % script_dir)
+        run_command('sudo cp %s/config_files/hostapd.conf /etc/hostapd.conf' % script_dir)
 
         print("Stopping services")
         run_command("systemctl stop dnsmasq")
@@ -68,8 +69,8 @@ def reset_to_host_mode():
         run_command("ifconfig wlan0 down")
         time.sleep(1)
         print("Starting hostapd")
-
         run_command("hostapd -d /etc/hostapd/hostapd.conf -B")
+
         print("Starting dnsmasq and dhcpcd")
         run_command("systemctl start dnsmasq")
         run_command("systemctl start dhcpcd")
