@@ -20,6 +20,7 @@ class Particle(Sensor):
         Sensor.__init__(self)
         self.name = "Temperature"
         self.unit = "fahrenheit"
+        self.sensor_running = False
 
     def get_name(self):
         return self.name

@@ -21,6 +21,7 @@ class Particle(Sensor):
         Sensor.__init__(self)
         self.name = "Humidity"
         self.unit = "rHl"
+        self.sensor_running = False
 
     def get_name(self):
         return self.name

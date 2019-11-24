@@ -25,7 +25,7 @@ class Particle(Sensor):
         global sgp
         self.name = "CO2"
         self.unit = "ppm"
-        print("HELLO!?")
+
         self.sgpObject = sgp
         self.sensor_running = False
 

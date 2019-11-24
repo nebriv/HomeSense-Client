@@ -20,6 +20,7 @@ class Particle(Sensor):
         Sensor.__init__(self)
         self.name = "Light"
         self.unit = "lux"
+        self.sensor_running = False
 
     def get_data(self):
         #return 54

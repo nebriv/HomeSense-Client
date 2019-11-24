@@ -22,6 +22,7 @@ class Particle(Sensor):
         Sensor.__init__(self)
         self.name = "TVoC"
         self.unit = "ppm"
+        self.sensor_running = False
 
     def setup(self):
         try:

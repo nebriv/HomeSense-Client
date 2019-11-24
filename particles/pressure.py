@@ -27,6 +27,7 @@ class Particle(Sensor):
         Sensor.__init__(self)
         self.name = "Pressure"
         self.unit = "kPa"
+        self.sensor_running = False
 
 
     def get_data(self):
