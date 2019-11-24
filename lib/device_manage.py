@@ -30,10 +30,10 @@ def remove_confgs():
     run_command('sudo mv /etc/systemd/system/homesense.service /etc/systemd/system/homesense.service.original')
 
 def copy_new_confgs():
-    run_command('sudo cp %s/dhcpcd.conf /etc/dhcpcd.conf' % script_dir)
-    run_command('sudo cp %s/dnsmasq.conf /etc/dnsmasq.conf' % script_dir)
-    run_command('sudo cp %s/hostapd.conf /etc/hostapd/hostapd.conf' % script_dir)
-    run_command('sudo cp %s/homesense.service /etc/systemd/system/homesense.service' % script_dir)
+    run_command('sudo cp %s/config_files/dhcpcd.conf /etc/dhcpcd.conf' % script_dir)
+    run_command('sudo cp %s/config_files/dnsmasq.conf /etc/dnsmasq.conf' % script_dir)
+    run_command('sudo cp %s/config_files/hostapd.conf /etc/hostapd/hostapd.conf' % script_dir)
+    run_command('sudo cp %s/config_files/homesense.service /etc/systemd/system/homesense.service' % script_dir)
     run_command('sudo systemctl daemon-reload')
     run_command('sudo rm -rf /etc/raspiwifi')
     run_command('sudo mkdir /etc/raspiwifi')
