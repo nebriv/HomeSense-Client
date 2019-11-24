@@ -108,8 +108,8 @@ def reset_to_client_mode(retry=3):
             return False
 
 def reset_device():
-    display.screen.display_blocker("Wifi Host")
-    display.screen.update_screen(["Starting WiFi..."], "Wifi Host")
+    display.screen.display_blocker("Device Reset")
+    display.screen.update_screen(["Resetting Device..."], "Device Reset")
     run_command("rm /home/pi/HomeSense/sensor.dat")
     run_command('rm -f /etc/wpa_supplicant/wpa_supplicant.conf')
     run_command('rm -f /home/pi/Projects/RaspiWifi/tmp/*')

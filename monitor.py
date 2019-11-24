@@ -17,6 +17,7 @@ from threading import Thread
 import git
 import psutil
 import requests
+from distutils.version import LooseVersion, StrictVersion
 
 from lib.daemon import Daemon
 from lib import display
@@ -34,6 +35,10 @@ formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(messag
 fh.setFormatter(formatter)
 # add handler to logger object
 logger.addHandler(fh)
+
+version = "1.0"
+update_url = "https://api.github.com/repos/nebriv/HomeSense-Client/releases/latest"
+
 
 def get_all_subclasses(cls):
     all_subclasses = []
@@ -179,13 +184,11 @@ class Monitor(Daemon):
         task = self.scheduler.enter(time, 1, function, (args))
         self.scheduled_tasks.append(task)
 
-    def check_for_updates(self):
+    def apply_updates(self):
+
         # TODO: Need to install requirements
 
         try:
-            self.display.update_screen(["Checking for updates"])
-            logger.info("Checking for sensor updates")
-
             g = git.cmd.Git(os.getcwd())
             update_results = g.pull()
             if "Updating " in update_results:
@@ -195,7 +198,21 @@ class Monitor(Daemon):
             logger.error(err)
             #print("CAUGHT EXCEPTION DURING UPDATES: %s" % err)
 
+    def check_for_updates(self):
+
+        self.display.update_screen(["Checking for updates"])
+        logger.info("Checking for sensor updates")
+
         self.add_scheduled_task(self.check_for_updates, 600)
+        r = requests.get(update_url)
+        if r.ok:
+            release_info = r.json()
+            if "tag_name" in release_info:
+                if LooseVersion(version) < LooseVersion(release_info['tag_name']):
+                    logger.info("Found new version: %s" % release_info['tag_name'])
+                    return True
+                else:
+                    return False
 
     def keyboard_interrupt(self, signal, frame):
         logger.info("Keyboard Interrupt - Shutting Down")
@@ -260,7 +277,7 @@ class Monitor(Daemon):
         try:
             logger.debug("Getting sensor settings from cloud")
             #self.display.update_screen(["Getting Sensor Settings"])
-            data = {'device_id': self.device_id, 'token': self.token}
+            data = {'device_id': self.device_id, 'token': self.token, 'version': version}
 
             r = requests.get(self.api_server + "/api/sensors/sensor_settings/", params=data)
 
@@ -294,6 +311,25 @@ class Monitor(Daemon):
                     logger.debug("Log level changed to: %s" % new_settings['log_level'])
                     self.log_level = new_settings['log_level']
                     settings_updated = True
+
+            if "device_reset" in new_settings:
+                if new_settings['device_reset']:
+                    command = "sudo python3 -m lib.device_manage --device"
+                    p = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
+                    while True:
+                        line = p.stdout.readline().decode("utf-8")
+                        logger.debug(line)
+                        if not line: break
+
+            if "device_reboot" in new_settings:
+                if new_settings['device_reboot']:
+                    command = "sudo reboot"
+                    p = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
+                    while True:
+                        line = p.stdout.readline().decode("utf-8")
+                        logger.debug(line)
+                        if not line: break
+
 
             if settings_updated:
                 self.reload_settings()
