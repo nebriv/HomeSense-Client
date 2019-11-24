@@ -9,19 +9,41 @@ if __name__ != "__main__":
 import multiprocessing, signal
 import socket
 
+script_dir = os.path.dirname(os.path.realpath(__file__))
+
+def setup():
+    remove_confgs()
+    copy_new_confgs()
+
+def backup_confgs():
+    run_command('sudo cp /etc/dhcpcd.conf /etc/dhcpcd.conf.original')
+    run_command('sudo cp /etc/dnsmasq.conf /etc/dnsmasq.conf.original')
+    run_command('sudo cp /etc/wpa_supplicant/wpa_supplicant.conf /etc/wpa_supplicant/wpa_supplicant.conf.original')
+    run_command('sudo cp /etc/hostapd/hostapd.conf /etc/hostapd/hostapd.conf.original')
+    run_command('sudo cp /etc/systemd/system/homesense.service /etc/systemd/system/homesense.service.original')
+
+def remove_confgs():
+    run_command('sudo mv /etc/dhcpcd.conf /etc/dhcpcd.conf.original')
+    run_command('sudo mv /etc/dnsmasq.conf /etc/dnsmasq.conf.original')
+    run_command('sudo mv /etc/wpa_supplicant/wpa_supplicant.conf /etc/wpa_supplicant/wpa_supplicant.conf.original')
+    run_command('sudo mv /etc/hostapd/hostapd.conf /etc/hostapd/hostapd.conf.original')
+    run_command('sudo mv /etc/systemd/system/homesense.service /etc/systemd/system/homesense.service.original')
+
+def copy_new_confgs():
+    run_command('sudo cp %s/dhcpcd.conf /etc/dhcpcd.conf' % script_dir)
+    run_command('sudo cp %s/dnsmasq.conf /etc/dnsmasq.conf' % script_dir)
+    run_command('sudo cp %s/hostapd.conf /etc/hostapd/hostapd.conf' % script_dir)
+    run_command('sudo cp %s/homesense.service /etc/systemd/system/homesense.service' % script_dir)
+    run_command('sudo systemctl daemon-reload')
+    run_command('sudo rm -rf /etc/raspiwifi')
+    run_command('sudo mkdir /etc/raspiwifi')
 
 def reset_to_host_mode():
     if not os.path.isfile('/etc/raspiwifi/host_mode'):
         display.screen.display_blocker("Wifi Host")
         display.screen.update_screen(["Starting WiFi Hotspot..."], "Wifi Host")
         print("Cleaning up config files")
-        run_command('rm -f /etc/wpa_supplicant/wpa_supplicant.conf')
-        run_command('rm -f /home/pi/Projects/RaspiWifi/tmp/*')
-        run_command('mv /etc/dhcpcd.conf /etc/dhcpcd.conf.original')
-        run_command('cp /usr/lib/raspiwifi/reset_device/static_files/dhcpcd.conf /etc/')
-        run_command('mv /etc/dnsmasq.conf /etc/dnsmasq.conf.original')
-        run_command('cp /usr/lib/raspiwifi/reset_device/static_files/dnsmasq.conf /etc/')
-        run_command('cp /usr/lib/raspiwifi/reset_device/static_files/dhcpcd.conf /etc/')
+        run_command('mv /etc/wpa_supplicant/wpa_supplicant.conf /etc/wpa_supplicant/wpa_supplicant.conf.orginal')
         run_command('touch /etc/raspiwifi/host_mode')
 
         print("Stopping services")
@@ -44,7 +66,7 @@ def reset_to_host_mode():
         print("Starting dnsmasq and dhcpcd")
         run_command("systemctl start dnsmasq")
         run_command("systemctl start dhcpcd")
-        run_command("touch /etc/raspiwifi/host_mode")
+
         display.screen.update_screen(["Connect to WiFi:", "HomeSense Wifi"], "Wifi Host")
         print("Running raspiwifi app")
 
@@ -111,13 +133,7 @@ def reset_device():
     display.screen.display_blocker("Device Reset")
     display.screen.update_screen(["Resetting Device..."], "Device Reset")
     run_command("rm /home/pi/HomeSense/sensor.dat")
-    run_command('rm -f /etc/wpa_supplicant/wpa_supplicant.conf')
-    run_command('rm -f /home/pi/Projects/RaspiWifi/tmp/*')
-    run_command('mv /etc/dhcpcd.conf /etc/dhcpcd.conf.original')
-    run_command('cp /usr/lib/raspiwifi/reset_device/static_files/dhcpcd.conf /etc/')
-    run_command('mv /etc/dnsmasq.conf /etc/dnsmasq.conf.original')
-    run_command('cp /usr/lib/raspiwifi/reset_device/static_files/dnsmasq.conf /etc/')
-    run_command('cp /usr/lib/raspiwifi/reset_device/static_files/dhcpcd.conf /etc/')
+    setup()
     run_command("reboot")
 
 if __name__ == "__main__":

@@ -1,0 +1,15 @@
+[Unit]
+Description=HomeSense Client
+After=network.target
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=2
+User=pi
+WorkingDirectory=/home/pi/HomeSense-Client/
+ExecStart=/usr/bin/python3 /home/pi/HomeSense-Client/monitor.py debug
+
+[Install]
+WantedBy=multi-user.target
