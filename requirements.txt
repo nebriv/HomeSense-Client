@@ -17,7 +17,7 @@ requests==2.20.0
 smbus2==0.2.0
 smmap2==2.0.3
 tsl2561==3.3
-urllib3==1.24.2
+urllib3==1.26.5
 Werkzeug==0.15.3
 pillow
 luma
